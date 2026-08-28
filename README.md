@@ -22,6 +22,8 @@ This is **not** an implementation of any proprietary Merly DIF algorithm.
 | [`docs/ORCH_INTEGRATION_ROADMAP.md`](docs/ORCH_INTEGRATION_ROADMAP.md) | Daily orch loop, attach rules, integration test ladder |
 | [`docs/BLOG_DIF_ORCH_EMBABEL.md`](docs/BLOG_DIF_ORCH_EMBABEL.md) | Publication source: three layers, how far we take the idea |
 
+Mermaid for the working test flow and each system's data model is in [Systems, tests, and data models](#systems-tests-and-data-models) below.
+
 Index: [`docs/README.md`](docs/README.md).
 
 ## What is stubbed
@@ -115,3 +117,239 @@ The known refresh-token wording is handled by `FixtureIntentInterpreter`, so fol
 ## Design rule
 
 Use stochastic reasoning to discover knowledge. Once a fact is accepted, fold it into typed intents, invariants, relations, and deterministic checks that Embabel can plan over.
+
+## Systems, tests, and data models
+
+Three systems stay separate. Tests prove they can talk without collapsing into one runtime.
+
+```mermaid
+flowchart LR
+  subgraph orch [Orchestrator]
+    canvas[REASONS Canvas]
+    next["sdlc.sh next"]
+    gate["sdlc.sh gate"]
+    lesson[LessonRecord]
+  end
+  subgraph dif [DIF]
+    fold["dif-fold.sh"]
+    model[SemanticModel]
+    gatejson[".gate.json"]
+  end
+  subgraph embabel [Embabel]
+    goap[GOAP planner]
+    plan[VerificationPlan]
+  end
+  subgraph guide [Guide / DICE]
+    neo4j[(Neo4j)]
+    named[WorkId Canvas Decision Pitfall]
+  end
+  canvas -->|accepted markdown| fold
+  fold --> model
+  model --> gatejson
+  gatejson -->|dif=ready or blocked| next
+  next -.->|never starts a JVM| goap
+  gate -.->|files exist?| canvas
+  model -->|optional JSONL quote| lesson
+  lesson -->|project_load| neo4j
+  neo4j --> named
+  model -->|already-folded facts| goap
+  goap --> plan
+```
+
+| System | Owns | Must not own |
+| --- | --- | --- |
+| **Orchestrator** | Who acts when. Work ID, canvas file, `next`, process gates, lesson ledger. | The fold. Starting Embabel. Being a planner. |
+| **DIF** | What must stay true. Same accepted canvas → same `SemanticModel`. | Daily orientation. Picking the Work ID. Replacing the canvas. |
+| **Embabel** | What action to take on *already folded* facts (optional JVM path). | The fold itself. `sdlc.sh next`. |
+| **Guide** | What we learned before (retrieve-only graph). | Ready For Coding. Fail-closed review. |
+
+### Working test flow
+
+What we actually run. Default CI is the first box. Live Guide/Embabel is opt-in and reuses the orch harness.
+
+```mermaid
+flowchart TB
+  unit["./mvnw test<br/>unit + CLI + fold gates<br/>EmbabelLivePlatformTest skipped unless DIF_LIVE_EMBABEL=1"]
+  smoke["./scripts/dif-orch-smoke.sh<br/>FEAT-001 ready + T03<br/>FEAT-099 exit 1"]
+  day["./scripts/dif-orch-day.sh<br/>fold twice / architect / review / plan --projection<br/>skip when CLI or snapshots missing"]
+  attach["orch tests/test-optional-dif.sh<br/>+ test-command-specs.sh<br/>stub: skipped / ready / blocked"]
+  live["./scripts/dif-live-e2e.sh<br/>orch test-guide-stack-live.sh<br/>quote JSONL via GuideClient<br/>Embabel GOAP UserInput → VerificationPlan"]
+  guideMvn["orch-guide ./mvnw test<br/>194 tests; needs Docker socket"]
+
+  unit --> smoke --> day
+  day --> attach
+  day --> live
+  live --> guideMvn
+```
+
+Live E2E sequence (the three-way path that already passed here):
+
+```mermaid
+sequenceDiagram
+  participant Day as dif-orch-day
+  participant Fold as dif-fold.sh
+  participant Orch as orch installer
+  participant Guide as Guide :21337
+  participant Graph as Neo4j
+  participant Quote as GuideClient
+  participant Emb as Embabel platform
+
+  Day->>Fold: fold / architect / review / plan --quiet
+  Fold-->>Day: dif=ready or dif=blocked
+  Orch->>Graph: neo4j/start embabel-neo4j
+  Orch->>Guide: guide/start no_ingest
+  Orch->>Guide: POST spdd-projection/load spring-boot-order-api
+  Fold->>Fold: guide JSONL Decision + Pitfall
+  Quote->>Guide: persist_lesson + project_load unique Work ID
+  Guide->>Graph: merge WorkId / Canvas / Pitfall
+  Quote->>Guide: GET work/{workId}
+  Guide-->>Quote: subgraph contains DIF-LIVE marker
+  Emb->>Emb: captureRequest → interpretIntent → foldIntent
+  Emb->>Emb: analyzeRepository → planVerification
+  Emb-->>Day: VerificationPlan readyForImplementation
+```
+
+### DIF data model
+
+Human contract is still the canvas. The machine contract is a regenerable `SemanticModel`. `.gate.json` is what orch reads.
+
+```mermaid
+erDiagram
+  REASONS_CANVAS ||--|| SemanticModel : "deterministic fold"
+  SemanticModel ||--o{ Intent : contains
+  SemanticModel ||--o{ Invariant : contains
+  SemanticModel ||--o{ SemanticRelation : contains
+  SemanticModel ||--o{ IntentConflict : contains
+  SemanticModel ||--o{ MissingObligation : contains
+  Intent ||--|| Provenance : sourced_from
+  Intent {
+    string id
+    enum type "REQUIREMENT CONSTRAINT PRESERVATION GOAL"
+    string statement
+    enum priority
+  }
+  Invariant {
+    string id
+    string description
+    enum strategy
+  }
+  IntentConflict {
+    Intent left
+    Intent right
+    string explanation
+    bool blocking
+  }
+  MissingObligation {
+    string obligation
+    string derivedFromIntent
+  }
+  SemanticModel ||--|| GateReport : projects
+  GateReport {
+    string workId
+    bool readyForImplementation
+    list blockingConflicts
+    list missingObligations
+  }
+  SemanticModel ||--|| VerificationPlan : planned_over
+  VerificationPlan ||--o{ VerificationRule : checks
+  SemanticSnapshot ||--o{ SemanticProperty : "path = value"
+  SemanticSnapshot ||--|| IntentDiff : review
+```
+
+Canvas sections map like this: **R** → `REQUIREMENT`, **N** non-goals → `CONSTRAINT`, **S** safeguards → `PRESERVATION`. A requirement vs non-goal pair becomes a blocking `IntentConflict`. An operation with no matching work (T03 on FEAT-001) becomes a `MissingObligation`. Review compares two `SemanticSnapshot`s; safeguard paths come from the canvas **S** lines, not login fixtures.
+
+Optional Guide quote from the same model (`GuideLedger`):
+
+```json
+{"kind":"Decision","workId":"FEAT-001-…","text":"<invariant>","source":"INV-…"}
+{"kind":"Pitfall","workId":"FEAT-001-…","text":"<conflict or Missing: T03 …>","source":"conflict"}
+```
+
+### Orchestrator data model
+
+Orch owns process, not fold. Files and ledger rows are the contract `sdlc.sh gate` already understands.
+
+```mermaid
+erDiagram
+  WORK_ID ||--|| REASONS_CANVAS : "spdd/canvas/WORK_ID.md"
+  WORK_ID ||--o{ OPERATION : "T01 T02 T03"
+  WORK_ID ||--o{ LessonRecord : ledger
+  REASONS_CANVAS {
+    string workId
+    string readiness "Ready For Coding or Needs Clarification"
+    string requirements
+    string nonGoals
+    string safeguards
+  }
+  LessonRecord {
+    string id
+    string kind "decision or pitfall"
+    string work_id
+    string area
+    string body
+    string source
+  }
+  LessonRecord ||--o| SQLITE : upsert
+  LessonRecord ||--o| GUIDE : "project_load when guide-dice on"
+  CHECK_CANVAS ||--|| GateReport : "architect --quiet"
+  CHECK_REVIEW ||--|| IntentDiff : "review --quiet"
+  CHECK_CANVAS {
+    string line "dif=ready or blocked or skipped"
+    int exit "0 skip/ready  1 blocked"
+  }
+```
+
+`next` / `architect` / `code` / `review` call `check-canvas.sh` or `check-review.sh` when the CLI is on PATH. Missing CLI or missing review snapshots → `dif=skipped` (exit 0). Present CLI + conflict or dropped safeguard → `dif=blocked` (exit 1). Orch CI uses `tests/fixtures/dif-fold-stub.sh` so it does not need Maven.
+
+### Guide and Embabel data models
+
+Guide is a retrieve-only NamedEntity graph in Neo4j. Embabel is a GOAP blackboard over DIF types. Neither replaces the canvas.
+
+```mermaid
+erDiagram
+  WorkId ||--o| Canvas : has_canvas
+  WorkId ||--o| Area : in_area
+  Canvas ||--o{ Operation : "T01 T02"
+  Decision }o--o| WorkId : recorded_for
+  Pitfall }o--o| WorkId : recorded_for
+  Decision }o--o| Area : about
+  Pitfall }o--o| Area : about
+  Pattern }o--o| WorkId : recorded_for
+  WorkId {
+    string id "FEAT-001-order-status-api"
+    string workType
+    string status
+  }
+  Canvas {
+    string id
+    string path
+    string readiness
+  }
+  Decision {
+    string id
+    string description
+  }
+  Pitfall {
+    string id
+    string description
+  }
+```
+
+```mermaid
+flowchart LR
+  UI[UserInput] --> CR[ChangeRequest]
+  CR --> CI[CandidateIntent]
+  CI --> SM[SemanticModel]
+  SM --> RA[RepositoryAnalysis]
+  SM --> VP[VerificationPlan]
+  RA --> VP
+  FI[FixtureIntentInterpreter] -.-> CI
+```
+
+Live Embabel (`EmbabelLivePlatformTest`, `DIF_LIVE_EMBABEL=1`) runs:
+
+`captureRequest` → `interpretIntent` → `foldIntent` → `analyzeRepository` → `planVerification`
+
+The refresh-token wording uses `FixtureIntentInterpreter` (no LLM). Conflicts stay on the `VerificationPlan` (`readyForImplementation=false`); they are not a GOAP precondition Embabel 1.5 cannot treat as an action post.
+
+Live Guide quote uses a **unique** Work ID (`FEAT-DIF-LIVE-…`) so it does not collide with orch’s already-projected `FEAT-001` from `examples/spring-boot-order-api`.
