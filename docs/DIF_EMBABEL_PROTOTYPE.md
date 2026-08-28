@@ -4,6 +4,8 @@
 > **Repository:** `jmjava/embabel-dif`  
 > **Goal:** Explore how a Deterministic Intent Folding (DIF)-style semantic layer could complement Embabel's typed domain model, blackboard, and deterministic planners.
 
+Companion docs: [why](REASONING.md) · [orchestrator attachment](RELATIONSHIP_SDLC_SPDD.md) · [index](README.md)
+
 ## 1. Purpose
 
 This prototype explores a hybrid agent architecture in which:
