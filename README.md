@@ -19,6 +19,7 @@ This is **not** an implementation of any proprietary Merly DIF algorithm.
 | [`docs/DIF_EMBABEL_PROTOTYPE.md`](docs/DIF_EMBABEL_PROTOTYPE.md) | What to build (IR, fold, planner, verifier, phases) |
 | [`docs/RELATIONSHIP_SDLC_SPDD.md`](docs/RELATIONSHIP_SDLC_SPDD.md) | How a REASONS Canvas becomes a checkable projection |
 | [`docs/FOLD_ITERATION.md`](docs/FOLD_ITERATION.md) | Steal ideas from cousins; ten steps to iterate the fold |
+| [`docs/ORCH_INTEGRATION_ROADMAP.md`](docs/ORCH_INTEGRATION_ROADMAP.md) | Daily orch loop, attach rules, integration test ladder |
 
 Index: [`docs/README.md`](docs/README.md).
 

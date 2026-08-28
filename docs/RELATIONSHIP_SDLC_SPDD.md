@@ -132,8 +132,10 @@ Phase order that respects both repos:
 Do not make `sdlc-engine` depend on a JVM agent to run `next` / `gate`.
 
 How the fold itself iterates (steal checks from cousins, ten steps behind
-`IntentFolder`) is [FOLD_ITERATION.md](FOLD_ITERATION.md). That plan continues
-this attachment order; it does not replace it.
+`IntentFolder`) is [FOLD_ITERATION.md](FOLD_ITERATION.md). How that attach
+shows up in a developer’s day, and how we test it before changing
+`sdlc-engine`, is [ORCH_INTEGRATION_ROADMAP.md](ORCH_INTEGRATION_ROADMAP.md).
+Those plans continue this attachment order; they do not replace it.
 
 ## What would count as success for the orchestrator
 
