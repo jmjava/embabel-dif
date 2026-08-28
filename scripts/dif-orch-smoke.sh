@@ -65,18 +65,29 @@ fi
 
 attach="$(cd "$(dirname "$0")" && pwd)/orch-attach"
 set +e
-DIF_DISABLED=1 "${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-001-order-status-api.md --out "$out"
+skip_out=$(DIF_DISABLED=1 "${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-001-order-status-api.md --out "$out")
 skip_code=$?
 set -e
 test "$skip_code" = 0
+test "$skip_out" = "dif=skipped"
 
 set +e
-"${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-001-order-status-api.md --out "$out"
+ready_out=$("${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-001-order-status-api.md --out "$out")
 ready_code=$?
-"${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-099-pagination-conflict.md --out "$out"
+block_out=$("${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-099-pagination-conflict.md --out "$out")
 block_code=$?
 set -e
 test "$ready_code" = 0
 test "$block_code" = 1
+test "$ready_out" = "dif=ready workId=FEAT-001-order-status-api readyForImplementation=true"
+test "$block_out" = "dif=blocked workId=FEAT-099-pagination-conflict readyForImplementation=false conflicts=1"
+python3 - "$ready_out" "$block_out" <<'PY'
+import sys
+for line in sys.argv[1:]:
+    if "\n" in line.strip():
+        raise SystemExit(f"check-canvas must be one line, got {line!r}")
+    if not line.startswith("dif="):
+        raise SystemExit(f"expected dif= prefix, got {line!r}")
+PY
 
 echo "dif-orch-smoke: OK"

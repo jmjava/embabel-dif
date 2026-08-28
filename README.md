@@ -87,8 +87,9 @@ and a stable `.gate.json` (`readyForImplementation`, `blockingConflicts`,
 Guide JSONL. `--alloy` writes an Alloy sketch; no extra binary is required.
 `dif-orch-smoke.sh` folds the harvested orch canvases and asserts those exit
 codes plus `.gate.json`. Existing orch commands may call
-`scripts/orch-attach/check-canvas.sh` as a silent gate (missing DIF is skip,
-not a new daily `next`).
+`scripts/orch-attach/check-canvas.sh` as a silent gate: one line
+`dif=ready|blocked|skipped` (missing DIF is skip, not a new daily `next`).
+`fold` / `architect --quiet` print that same line.
 
 In the Embabel shell:
 

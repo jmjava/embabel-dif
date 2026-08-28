@@ -168,7 +168,9 @@ day if it is installed, and the **same** day if it is not.
 The thing we declined — a second orientation command people must learn —
 would have been DIF doing the orchestrator’s job. Silent fail-closed on
 existing architect / code is DIF doing DIF’s job: the readiness string
-becomes earned. The runbook stays the orchestrator’s.
+becomes earned. The runbook stays the orchestrator’s. When the hook
+runs, the agent sees one line (`dif=ready`, `dif=blocked`, or
+`dif=skipped`) — not a fold dump they then have to interpret.
 
 Embabel stays later and optional. Wiring it into `next` would be the
 other collapse.

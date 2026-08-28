@@ -3,6 +3,7 @@ package com.embabel.dif.cli;
 import com.embabel.dif.FoldWiring;
 import com.embabel.dif.dif.AlloyModelEmitter;
 import com.embabel.dif.domain.ProposedChange;
+import com.embabel.dif.domain.SemanticModel;
 import com.embabel.dif.domain.SemanticSnapshot;
 import com.embabel.dif.domain.TestExecution;
 import com.embabel.dif.memory.GuideLedger;
@@ -41,15 +42,16 @@ public final class DifCli {
         if (args.length == 0 || "help".equals(args[0]) || "--help".equals(args[0])) {
             System.out.println("""
                     Usage:
-                      fold --canvas <file> [--out <dir>] [--guide] [--alloy]
-                      architect --canvas <file> [--out <dir>]
-                      architect --projection <file>
+                      fold --canvas <file> [--out <dir>] [--guide] [--alloy] [--quiet]
+                      architect --canvas <file> [--out <dir>] [--quiet]
+                      architect --projection <file> [--quiet]
                       review --before <snapshot.json> --after <snapshot.json> [--canvas <file>]
                       plan --canvas <file> [--out <dir>]
                       guide --canvas <file> [--out <dir>]
                     
                     fold writes a deterministic SemanticModel projection and .gate.json.
                     architect / review fail closed from the projection or IntentDiff.
+                    --quiet prints one line: dif=ready|blocked (orch attach).
                     Exit 1 if blocking conflicts exist or review invariants fail.
                     """);
             return args.length == 0 ? 2 : 0;
@@ -78,6 +80,36 @@ public final class DifCli {
             System.err.println("--canvas is required");
             return 2;
         }
+        var written = writeFold(flags);
+        if (flags.quiet) {
+            System.out.println(written.gate().oneLine());
+        } else {
+            System.out.print(SemanticModelRenderer.render(written.model()));
+            System.out.println("wrote " + written.jsonPath());
+            System.out.println("wrote " + written.gatePath());
+        }
+        return written.exitCode();
+    }
+
+    private static int architect(String[] args) throws Exception {
+        var flags = Flags.parse(args);
+        if (flags.projectionPath != null) {
+            return architectFromProjection(flags);
+        }
+        if (flags.canvasPath == null) {
+            System.err.println("--canvas or --projection is required");
+            return 2;
+        }
+        var written = writeFold(flags);
+        if (flags.quiet) {
+            System.out.println(written.gate().oneLine());
+        } else {
+            printArchitect(written.workId(), written.blocking(), SemanticModelRenderer.render(written.model()));
+        }
+        return written.exitCode();
+    }
+
+    private static WrittenFold writeFold(Flags flags) throws Exception {
         var markdown = Files.readString(flags.canvasPath, StandardCharsets.UTF_8);
         var folder = FoldWiring.canvasFolder();
         var canvas = folder.parse(markdown);
@@ -110,40 +142,23 @@ public final class DifCli {
                     StandardCharsets.UTF_8
             );
         }
-
-        System.out.print(SemanticModelRenderer.render(model));
-        System.out.println("wrote " + jsonPath);
-        System.out.println("wrote " + gatePath);
-        return model.hasBlockingConflicts() ? 1 : 0;
+        return new WrittenFold(canvas.workId(), model, jsonPath, gatePath);
     }
 
-    private static int architect(String[] args) throws Exception {
-        var flags = Flags.parse(args);
-        if (flags.projectionPath != null) {
-            return architectFromProjection(flags.projectionPath);
-        }
-        if (flags.canvasPath == null) {
-            System.err.println("--canvas or --projection is required");
-            return 2;
-        }
-        var foldCode = fold(args);
-        var markdown = Files.readString(flags.canvasPath, StandardCharsets.UTF_8);
-        var folder = FoldWiring.canvasFolder();
-        var canvas = folder.parse(markdown);
-        var model = folder.fold(canvas);
-        printArchitect(canvas.workId(), model.hasBlockingConflicts(), SemanticModelRenderer.render(model));
-        return foldCode;
-    }
-
-    private static int architectFromProjection(Path projectionPath) throws Exception {
-        var root = mapper().readTree(projectionPath.toFile());
+    private static int architectFromProjection(Flags flags) throws Exception {
+        var root = mapper().readTree(flags.projectionPath.toFile());
         var workId = root.path("workId").asText("UNKNOWN");
         var ready = root.path("readyForImplementation").asBoolean(false);
+        var conflicts = root.path("model").path("conflicts");
+        var conflictCount = conflicts.isArray() ? conflicts.size() : 0;
+        if (flags.quiet) {
+            System.out.println(GateReport.oneLine(workId, ready, conflictCount));
+            return ready ? 0 : 1;
+        }
         var report = new StringBuilder();
         report.append("architect workId=").append(workId).append('\n');
         report.append("readyForImplementation=").append(ready).append('\n');
         report.append("source=projection\n");
-        var conflicts = root.path("model").path("conflicts");
         if (!conflicts.isArray() || conflicts.isEmpty()) {
             report.append("conflicts:\n  - none\n");
         } else {
@@ -160,6 +175,20 @@ public final class DifCli {
         }
         System.out.print(report);
         return ready ? 0 : 1;
+    }
+
+    private record WrittenFold(String workId, SemanticModel model, Path jsonPath, Path gatePath) {
+        GateReport gate() {
+            return GateReport.from(workId, model);
+        }
+
+        boolean blocking() {
+            return model.hasBlockingConflicts();
+        }
+
+        int exitCode() {
+            return blocking() ? 1 : 0;
+        }
     }
 
     private static void printArchitect(String workId, boolean blocking, String rendered) {
@@ -256,6 +285,7 @@ public final class DifCli {
         private Path afterPath;
         private boolean guide;
         private boolean alloy;
+        private boolean quiet;
 
         private static Flags parse(String[] args) {
             var flags = new Flags();
@@ -268,6 +298,7 @@ public final class DifCli {
                     case "--after" -> flags.afterPath = Path.of(requireValue(args, ++i, "--after"));
                     case "--guide" -> flags.guide = true;
                     case "--alloy" -> flags.alloy = true;
+                    case "--quiet" -> flags.quiet = true;
                     default -> throw new IllegalArgumentException("Unknown argument: " + args[i]);
                 }
             }

@@ -36,6 +36,22 @@ public record GateReport(
         return new GateReport(workId, !model.hasBlockingConflicts(), conflicts, missing);
     }
 
+    /**
+     * One-line gate for orch attach. Matches {@code dif=skipped} from
+     * {@code check-canvas.sh} when the CLI is absent.
+     */
+    public String oneLine() {
+        return oneLine(workId, readyForImplementation, blockingConflicts.size());
+    }
+
+    public static String oneLine(String workId, boolean ready, int conflictCount) {
+        if (ready) {
+            return "dif=ready workId=" + workId + " readyForImplementation=true";
+        }
+        return "dif=blocked workId=" + workId
+                + " readyForImplementation=false conflicts=" + conflictCount;
+    }
+
     public record BlockingConflict(String left, String right, String explanation) {
     }
 }
