@@ -221,7 +221,7 @@ Docker, Neo4j, and sibling clones of orch + Guide:
 | Stable `.gate.json` for a Python helper to read | Working |
 | `IntentDiff.render()` RESULT line | Working (`RESULT: FAIL` when a required path is removed) |
 | Non-goals classified as `CONSTRAINT` only | Working (no `Preserve: Non-goal:` invariants) |
-| Review against a *real* orch diff, not login fixtures | **Not started** |
+| Review against a *real* orch diff, not login fixtures | Working (`order-status-auth-broken` + canvas safeguards) |
 | Embabel required for `next` | Must stay false |
 
 Until the orch attach exists, “integration” is a sibling checkout and
@@ -335,6 +335,7 @@ the CLI is absent.
 
 **Done when:** orch CI with no `embabel-dif` checkout is green, and a
 present CLI on FEAT-099 stops architect from setting Ready For Coding.
+**Done** (`sdlc-spdd-orchestrator` #208).
 
 ### Slice 4 — Fail-closed attach on one Work ID
 
@@ -352,6 +353,9 @@ does not need Maven.
 
 **Done when:** RELATIONSHIP success criteria 2 and 5 are true on one
 real Work ID without asking an LLM whether the canvas “looks ready.”
+**In progress here:** `review --quiet` on orch `order-status-*.json`;
+orch review templates skip when snapshots are absent. Stub
+`tests/test-optional-dif.sh` covers missing / exit 0 / exit 1 without Maven.
 
 ### Slice 5 — One scripted developer day
 
@@ -364,6 +368,8 @@ Still no Embabel. Guide remains optional.
 **Done when:** RELATIONSHIP success criteria 1, 3, and 4 are true in
 that loop (same fold twice; syntax can change; T03 is a
 `MissingObligation`).
+**Done** as `scripts/dif-orch-day.sh` (no Embabel process, Guide JSONL
+only as an optional quote).
 
 ### Slice 6 — Optional Guide vocabulary, then Embabel
 
@@ -375,6 +381,9 @@ chooses the Work ID and T##.
 **Done when:** GOAP builds a `VerificationPlan` from the projection
 without re-interpreting markdown, and a day without Guide or Embabel
 still works.
+**CLI half done:** `plan --projection` calls `VerificationPlanner` on
+the folded model. Live Embabel / Guide ingest stay optional and must
+not be required for `next`.
 
 ---
 
