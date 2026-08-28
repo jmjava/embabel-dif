@@ -13,6 +13,7 @@ import java.util.Locale;
 
 /**
  * Absence reasoning: obligations implied by intent that the repository does not yet satisfy.
+ * // coverage: intent-lang
  */
 @Component
 public class ObligationDeriver {
@@ -42,6 +43,13 @@ public class ObligationDeriver {
                     "replay detection",
                     "rotation integration test"
             );
+        }
+        if (statement.contains("webhook") && (statement.contains("retr") || statement.contains("idempot"))) {
+            return List.of("idempotency key", "retry integration test");
+        }
+        if ((statement.contains("retr") && statement.contains("deliver"))
+                || statement.contains("idempot")) {
+            return List.of("idempotency key", "retry integration test");
         }
         return List.of();
     }

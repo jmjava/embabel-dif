@@ -1,0 +1,9 @@
+{
+  "properties": [
+    { "path": "refresh-token.reusable", "value": "false" },
+    { "path": "refresh-token.rotates", "value": "true" },
+    { "path": "provider.GOOGLE", "value": "present" },
+    { "path": "provider.APPLE", "value": "present" },
+    { "path": "jwt.claim.sessionToken", "value": "present" }
+  ]
+}

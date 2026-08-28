@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 /**
  * Maps an accepted canvas into candidate facts. No LLM.
+ * Section headings decide type (goal vs safety), not suggested wording.
+ * // goal/safety: intent-lang
  */
 @Component
 public class CanvasIntentMapper {

@@ -15,9 +15,13 @@ import java.util.stream.Collectors;
 
 /**
  * Finds mutually exclusive accepted intents before implementation proceeds.
+ * // vacuity: intent-lang
+ * Token rules first; {@link FormalConflictBackend} only for pairs tokens miss.
  */
 @Component
 public class ConflictDetector {
+
+    private final FormalConflictBackend formal = new FormalConflictBackend();
 
     private static final Set<String> STOP_WORDS = Set.of(
             "that", "this", "with", "from", "must", "remain", "change", "changes",
@@ -39,22 +43,29 @@ public class ConflictDetector {
         var a = normalize(left.statement());
         var b = normalize(right.statement());
         if (singleUse(a) && reusable(b) || singleUse(b) && reusable(a)) {
-            return java.util.Optional.of(new IntentConflict(
+            return java.util.Optional.of(quoted(
                     left,
                     right,
-                    ConflictReason.MUTUALLY_EXCLUSIVE,
                     "Refresh-token single-use/rotation conflicts with indefinite reuse"
             ));
         }
         if (requirementVsNonGoal(left, right) && sharesSignificantToken(a, b)) {
-            return java.util.Optional.of(new IntentConflict(
+            return java.util.Optional.of(quoted(
                     left,
                     right,
-                    ConflictReason.MUTUALLY_EXCLUSIVE,
                     "Requirement conflicts with a canvas non-goal"
             ));
         }
-        return java.util.Optional.empty();
+        return formal.detect(left, right);
+    }
+
+    private static IntentConflict quoted(Intent left, Intent right, String rule) {
+        return new IntentConflict(
+                left,
+                right,
+                ConflictReason.MUTUALLY_EXCLUSIVE,
+                rule + ": \"" + left.statement() + "\" vs \"" + right.statement() + "\""
+        );
     }
 
     private static boolean requirementVsNonGoal(Intent left, Intent right) {

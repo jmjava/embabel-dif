@@ -2,4 +2,7 @@
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
-exec ./mvnw -q exec:java -Dexec.mainClass=com.embabel.dif.cli.DifCli -Dexec.args="fold $*"
+if [[ $# -eq 0 || "${1:-}" == --* ]]; then
+  set -- fold "$@"
+fi
+exec ./mvnw -q exec:java -Dexec.mainClass=com.embabel.dif.cli.DifCli -Dexec.args="$*"

@@ -53,6 +53,19 @@ class CanvasFolderTest {
 
         assertThat(model.hasBlockingConflicts()).isTrue();
         assertThat(model.conflicts()).isNotEmpty();
+        assertThat(model.conflicts().getFirst().explanation())
+                .contains("paginated")
+                .contains("Pagination");
+    }
+
+    @Test
+    void refreshSingleUseConflictsWithIndefiniteReuseOnCanvas() throws Exception {
+        var model = folder.fold(readExample("FEAT-040-refresh-reuse-conflict.md"));
+
+        assertThat(model.hasBlockingConflicts()).isTrue();
+        assertThat(model.conflicts().getFirst().explanation())
+                .contains("single-use")
+                .contains("indefinitely");
     }
 
     private static String readExample(String name) throws IOException {

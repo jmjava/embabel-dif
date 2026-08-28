@@ -69,12 +69,17 @@ src/main/java/com/embabel/dif/
 ```bash
 ./mvnw test
 ./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
+./scripts/dif-fold.sh architect --projection .dif/projections/FEAT-099-pagination-conflict.json
+./scripts/dif-fold.sh review --before examples/snapshots/login-before.json --after examples/snapshots/login-auth-broken.json
+./scripts/dif-fold.sh plan --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/shell.sh
 ```
 
-`dif-fold` does not start Embabel. It reads a REASONS Canvas and writes
-`.dif/projections/<WORK-ID>.json` plus a text summary. Exit `1` means blocking
-intent conflicts (architect should not mark Ready For Coding).
+`dif-fold` does not start Embabel. `fold` writes `.dif/projections/<WORK-ID>.json`.
+`architect` and `review` fail closed from a projection or `IntentDiff` (exit `1`
+= not Ready For Coding / invariants not preserved). `plan` builds a
+`VerificationPlan` from the folded model. `--guide` / `guide` writes optional
+Guide JSONL. `--alloy` writes an Alloy sketch; no extra binary is required.
 
 In the Embabel shell:
 
