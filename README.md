@@ -72,6 +72,7 @@ src/main/java/com/embabel/dif/
 ./mvnw test
 ./scripts/dif-orch-smoke.sh
 ./scripts/dif-orch-day.sh
+./scripts/dif-live-e2e.sh   # reuses orch Guide+Neo4j; optional live Embabel
 ./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/dif-fold.sh architect --projection .dif/projections/FEAT-099-pagination-conflict.json
 ./scripts/dif-fold.sh review --before examples/snapshots/login-before.json --after examples/snapshots/login-auth-broken.json
@@ -95,7 +96,10 @@ canvas uses `examples/snapshots/order-status-*.json` (safeguard paths),
 not the login fixtures. `check-review.sh` skips when those files are
 absent. `plan --projection` builds a `VerificationPlan` from a folded
 model without re-reading markdown. `./scripts/dif-orch-day.sh` is the
-scripted day.
+scripted day. `./scripts/dif-live-e2e.sh` reuses the orchestrator's
+existing `tests/test-guide-stack-live.sh` to boot Guide+Neo4j, quotes
+DIF JSONL through `GuideClient`, then boots the Embabel Spring
+platform. It does not put Embabel or Guide inside `sdlc.sh next`.
 
 In the Embabel shell:
 
