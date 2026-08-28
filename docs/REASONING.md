@@ -3,7 +3,10 @@
 This document is the **why**. The prototype spec says what to build. The
 orchestrator note says how the two repos attach. The
 [fold iteration note](FOLD_ITERATION.md) says how we steal checkable ideas
-and grow the rule catalog. This page is the argument that justifies those.
+and grow the rule catalog. The
+[integration roadmap](ORCH_INTEGRATION_ROADMAP.md) says how the attach
+enters a developer’s day and how we test that before touching
+`sdlc-engine`. This page is the argument that justifies those.
 
 It is also a record of decisions so a later session does not reconstruct a
 slightly different story from the code.
@@ -357,7 +360,9 @@ way it opts into Guide.
 - Not a new human-facing language; stolen checks compile into `SemanticModel`
 
 How the fold iterates — steal the *check*, not the cousin’s runtime — is
-[FOLD_ITERATION.md](FOLD_ITERATION.md).
+[FOLD_ITERATION.md](FOLD_ITERATION.md). How that fold is tested against the
+orchestrator’s daily loop is
+[ORCH_INTEGRATION_ROADMAP.md](ORCH_INTEGRATION_ROADMAP.md).
 
 The experiment is specifically this:
 
