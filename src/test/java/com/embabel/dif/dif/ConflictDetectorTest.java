@@ -27,5 +27,8 @@ class ConflictDetectorTest {
         assertThat(conflicts).hasSize(1);
         assertThat(conflicts.getFirst().reason()).isEqualTo(ConflictReason.MUTUALLY_EXCLUSIVE);
         assertThat(conflicts.getFirst().blocking()).isTrue();
+        assertThat(conflicts.getFirst().explanation())
+                .contains("\"Refresh tokens must be single-use.\"")
+                .contains("\"Existing clients must be able to reuse the same refresh token indefinitely.\"");
     }
 }

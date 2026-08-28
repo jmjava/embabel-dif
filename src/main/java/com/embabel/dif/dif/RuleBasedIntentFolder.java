@@ -29,6 +29,8 @@ import java.util.Set;
 /**
  * Deterministic fold: normalize, deduplicate, derive invariants, relate, detect conflicts.
  * No novel mathematical folding algorithm — rule-based MVP from the prototype spec.
+ * Grow the catalog here; see docs/FOLD_ITERATION.md.
+ * // requires/ensures as named contracts: lhaig/intent, kodo
  */
 @Component
 public class RuleBasedIntentFolder implements IntentFolder {

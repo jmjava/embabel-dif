@@ -53,7 +53,8 @@ public class CanvasFolder {
         return canvas.operations().stream()
                 .filter(operation -> !operation.complete())
                 .map(operation -> new MissingObligation(
-                        operation.id() + " - " + operation.name(),
+                        operation.id() + " - " + operation.name()
+                                + (operation.description().isBlank() ? "" : ": " + operation.description()),
                         canvas.workId()
                 ))
                 .toList();

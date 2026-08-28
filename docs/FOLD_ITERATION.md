@@ -106,6 +106,19 @@ These steps continue the path in [REASONING.md](REASONING.md) §9. They are
 ordered so each one can be wrong in an interesting way before we spend
 complexity on the next.
 
+| Step | Status | Where |
+| --- | --- | --- |
+| 1. Lock the fold contract | Done | `FoldContractTest` names the five checks |
+| 2. Steal list next to the code | Done | Javadoc `// vacuity: intent-lang` (and cousins) on the rules |
+| 3. Harvest canvases | Done | `examples/canvases/README.md` |
+| 4. Classify from headings | Done | `CanvasIntentMapper` + `CanvasClassificationTest` |
+| 5. Named conflicts, quoted | Done | `ConflictDetector` explanations quote both intents |
+| 6. Obligations from open T## | Done | Open ops + webhook/retry implications (`FEAT-020`) |
+| 7. Syntax stays out of invariants | Done | `FEAT-070-dto-rename-*` + `SyntaxVarianceTest` |
+| 8. Formal backend after tokens fail | Done | `FormalConflictBackend` + optional `.als` (`FEAT-080`) |
+| 9. Architect / review attach | Done | `dif-fold.sh architect --projection` / `review --before --after` |
+| 10. Embabel consumes; Guide may quote | Done | `VerificationPlanner` + `guide` JSONL; Guide remains optional |
+
 ### Step 1 — Lock the fold contract
 
 `IntentFolder.fold(CandidateIntent) → SemanticModel` is the only swap point.
