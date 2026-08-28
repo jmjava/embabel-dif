@@ -12,6 +12,7 @@ This page records two decisions:
 The prototype spec says what the IR is. [REASONING.md](REASONING.md) says why
 the fold is a sibling of Embabel, not Embabel itself. How the attach enters
 a developer’s day is [ORCH_INTEGRATION_ROADMAP.md](ORCH_INTEGRATION_ROADMAP.md).
+The publication source is [BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md).
 This page says how the fold gets better without becoming a research project.
 
 ---

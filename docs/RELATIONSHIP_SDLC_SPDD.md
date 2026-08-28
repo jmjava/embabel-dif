@@ -135,6 +135,8 @@ How the fold itself iterates (steal checks from cousins, ten steps behind
 `IntentFolder`) is [FOLD_ITERATION.md](FOLD_ITERATION.md). How that attach
 shows up in a developer’s day, and how we test it before changing
 `sdlc-engine`, is [ORCH_INTEGRATION_ROADMAP.md](ORCH_INTEGRATION_ROADMAP.md).
+The public-facing cut of the same plan is
+[BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md).
 Those plans continue this attachment order; they do not replace it.
 
 ## What would count as success for the orchestrator
