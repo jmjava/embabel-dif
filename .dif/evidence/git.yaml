@@ -1,0 +1,8 @@
+- id: E3
+  type: GIT_HISTORY
+  source: 7e93982
+  observation: Commit history says sessionToken claim was added for mobile compatibility.
+- id: R6
+  type: RUNTIME
+  source: tokens
+  observation: Refresh tokens currently remain valid after use.

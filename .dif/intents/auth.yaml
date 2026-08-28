@@ -1,0 +1,31 @@
+# Seed memory for the prototype refresh-token scenario.
+# Phase 6 will load/save these files automatically.
+id: INT-001
+type: REQUIREMENT
+statement: Add refresh-token rotation.
+priority: REQUIRED
+source: CHANGE-REQUEST-42
+---
+id: INT-002
+type: PRESERVATION
+statement: Preserve Google login.
+priority: REQUIRED
+source: CHANGE-REQUEST-42
+---
+id: INT-003
+type: PRESERVATION
+statement: Preserve Apple login.
+priority: REQUIRED
+source: CHANGE-REQUEST-42
+---
+id: INT-004
+type: PRESERVATION
+statement: Preserve Authorization Code Flow.
+priority: REQUIRED
+source: CHANGE-REQUEST-42
+---
+id: INT-005
+type: PRESERVATION
+statement: Preserve sessionToken claim.
+priority: REQUIRED
+source: CHANGE-REQUEST-42
