@@ -4,7 +4,7 @@
 > **Repository:** `jmjava/embabel-dif`  
 > **Goal:** Explore how a Deterministic Intent Folding (DIF)-style semantic layer could complement Embabel's typed domain model, blackboard, and deterministic planners.
 
-Companion docs: [why](REASONING.md) · [orchestrator attachment](RELATIONSHIP_SDLC_SPDD.md) · [index](README.md)
+Companion docs: [why](REASONING.md) · [orchestrator attachment](RELATIONSHIP_SDLC_SPDD.md) · [fold iteration](FOLD_ITERATION.md) · [index](README.md)
 
 ## 1. Purpose
 

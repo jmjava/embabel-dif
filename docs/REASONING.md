@@ -1,8 +1,9 @@
 # Reasoning
 
 This document is the **why**. The prototype spec says what to build. The
-orchestrator note says how the two repos attach. This page is the argument that
-justifies both.
+orchestrator note says how the two repos attach. The
+[fold iteration note](FOLD_ITERATION.md) says how we steal checkable ideas
+and grow the rule catalog. This page is the argument that justifies those.
 
 It is also a record of decisions so a later session does not reconstruct a
 slightly different story from the code.
@@ -352,6 +353,11 @@ way it opts into Guide.
 - Not “just another prompt template”
 - Not an attempt to make all AI deterministic
 - Not a reason to compile the orchestrator into an agent runtime
+- Not a hunt for an open-source Merly folder (there isn’t one)
+- Not a new human-facing language; stolen checks compile into `SemanticModel`
+
+How the fold iterates — steal the *check*, not the cousin’s runtime — is
+[FOLD_ITERATION.md](FOLD_ITERATION.md).
 
 The experiment is specifically this:
 
