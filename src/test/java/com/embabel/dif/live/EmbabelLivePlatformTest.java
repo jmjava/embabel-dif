@@ -2,6 +2,7 @@ package com.embabel.dif.live;
 
 import com.embabel.agent.api.invocation.AgentInvocation;
 import com.embabel.agent.core.AgentPlatform;
+import com.embabel.agent.domain.io.UserInput;
 import com.embabel.dif.canvas.CanvasFolder;
 import com.embabel.dif.dif.VerificationPlanner;
 import com.embabel.dif.domain.VerificationPlan;
@@ -39,7 +40,7 @@ class EmbabelLivePlatformTest {
     void liveGoapFoldsRefreshTokenThroughTheAgentPlatform() {
         var plan = AgentInvocation
                 .create(agentPlatform, VerificationPlan.class)
-                .invoke(RefreshTokenScenario.request());
+                .invoke(new UserInput(RefreshTokenScenario.REQUEST_TEXT));
 
         assertThat(plan.readyForImplementation()).isTrue();
         assertThat(plan.rules()).isNotEmpty();

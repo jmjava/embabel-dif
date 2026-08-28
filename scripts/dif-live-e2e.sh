@@ -55,12 +55,7 @@ python3 ./scripts/dif-live-guide-quote.py \
   "$out/FEAT-001-order-status-api.guide.jsonl" \
   examples/canvases/FEAT-001-order-status-api.md
 
-echo "== 5. live Embabel Spring platform (no OpenAI starter; fixture path) =="
-# OPENAI_API_KEY auto-activates embabel-agent-starter-openai, which fails to
-# load ChatClient auto-config here. Live Embabel tonight is the GOAP platform,
-# not an LLM call.
-env -u OPENAI_API_KEY -u ANTHROPIC_API_KEY \
-  DIF_LIVE_EMBABEL=1 \
-  ./mvnw -q -P-openai-models -P-anthropic-models -Dtest=EmbabelLivePlatformTest test
+echo "== 5. live Embabel Spring platform (fixture GOAP; no markdown re-parse) =="
+DIF_LIVE_EMBABEL=1 ./mvnw -q -Dtest=EmbabelLivePlatformTest test
 
 echo "dif-live-e2e: OK"
