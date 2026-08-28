@@ -10,3 +10,13 @@ Existing SDLC-SPDD commands may call these scripts. Users keep
 
 Orch templates should treat a missing CLI as normal, the same way they
 treat a missing Guide backend.
+
+The orchestrator repo change (architect / code / next specs + generated
+adapters) is in
+`sdlc-spdd-orchestrator-optional-dif.patch`. Apply it in that repo:
+
+```text
+git apply scripts/orch-attach/sdlc-spdd-orchestrator-optional-dif.patch
+```
+
+This checkout could not push to `jmjava/sdlc-spdd-orchestrator` (403).
