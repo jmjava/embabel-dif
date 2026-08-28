@@ -54,6 +54,8 @@ class FoldContractTest {
         );
 
         assertThat(diff.preserves(RuleBasedSemanticVerifier.REQUIRED_UNCHANGED)).isFalse();
+        assertThat(diff.passed()).isFalse();
+        assertThat(diff.render()).contains("RESULT: FAIL").doesNotContain("RESULT: PASS");
         assertThat(verification.passed()).isFalse();
         assertThat(verification.results())
                 .anyMatch(result -> result.failureReason().orElse("").contains("were not preserved"));
@@ -90,6 +92,8 @@ class FoldContractTest {
         assertThat(model.intents())
                 .anyMatch(intent -> intent.type() == IntentType.CONSTRAINT
                         && intent.statement().toLowerCase().contains("paginat"));
+        assertThat(model.invariants())
+                .noneMatch(invariant -> invariant.description().startsWith("Preserve: Non-goal:"));
     }
 
     private static List<String> invariantDescriptions(com.embabel.dif.domain.SemanticModel model) {

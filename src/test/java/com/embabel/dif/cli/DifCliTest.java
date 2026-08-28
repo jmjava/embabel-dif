@@ -28,6 +28,10 @@ class DifCliTest {
                 .contains("T03 - Document API behavior")
                 .contains("readyForImplementation=true");
         assertThat(tempDir.resolve("FEAT-001-order-status-api.json")).exists();
+        assertThat(Files.readString(tempDir.resolve("FEAT-001-order-status-api.gate.json")))
+                .contains("\"readyForImplementation\" : true")
+                .contains("T03")
+                .doesNotContain("\"readyForImplementation\" : false");
     }
 
     @Test
@@ -43,5 +47,8 @@ class DifCliTest {
         assertThat(code).isEqualTo(1);
         assertThat(Files.readString(tempDir.resolve("FEAT-099-pagination-conflict.txt")))
                 .contains("CONFLICTS_WITH");
+        assertThat(Files.readString(tempDir.resolve("FEAT-099-pagination-conflict.gate.json")))
+                .contains("\"readyForImplementation\" : false")
+                .contains("paginated");
     }
 }

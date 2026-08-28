@@ -48,7 +48,7 @@ public final class DifCli {
                       plan --canvas <file> [--out <dir>]
                       guide --canvas <file> [--out <dir>]
                     
-                    fold writes a deterministic SemanticModel projection.
+                    fold writes a deterministic SemanticModel projection and .gate.json.
                     architect / review fail closed from the projection or IntentDiff.
                     Exit 1 if blocking conflicts exist or review invariants fail.
                     """);
@@ -91,8 +91,10 @@ public final class DifCli {
 
         Files.createDirectories(flags.outDir);
         var jsonPath = flags.outDir.resolve(canvas.workId() + ".json");
+        var gatePath = flags.outDir.resolve(canvas.workId() + ".gate.json");
         var textPath = flags.outDir.resolve(canvas.workId() + ".txt");
         mapper().writerWithDefaultPrettyPrinter().writeValue(jsonPath.toFile(), projection);
+        mapper().writerWithDefaultPrettyPrinter().writeValue(gatePath.toFile(), GateReport.from(canvas.workId(), model));
         Files.writeString(textPath, SemanticModelRenderer.render(model), StandardCharsets.UTF_8);
         if (flags.alloy) {
             Files.writeString(
@@ -111,6 +113,7 @@ public final class DifCli {
 
         System.out.print(SemanticModelRenderer.render(model));
         System.out.println("wrote " + jsonPath);
+        System.out.println("wrote " + gatePath);
         return model.hasBlockingConflicts() ? 1 : 0;
     }
 

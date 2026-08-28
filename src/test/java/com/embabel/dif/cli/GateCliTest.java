@@ -34,15 +34,42 @@ class GateCliTest {
 
     @Test
     void reviewFailsWhenRequiredLoginPropertyIsRemoved() throws Exception {
-        var code = DifCli.run(new String[]{
-                "review",
-                "--before",
-                "examples/snapshots/login-before.json",
-                "--after",
-                "examples/snapshots/login-auth-broken.json"
-        });
+        var original = System.out;
+        var buffer = new java.io.ByteArrayOutputStream();
+        System.setOut(new java.io.PrintStream(buffer));
+        int code;
+        try {
+            code = DifCli.run(new String[]{
+                    "review",
+                    "--before",
+                    "examples/snapshots/login-before.json",
+                    "--after",
+                    "examples/snapshots/login-auth-broken.json"
+            });
+        } finally {
+            System.setOut(original);
+        }
 
         assertThat(code).isEqualTo(1);
+        assertThat(buffer.toString()).contains("RESULT: FAIL").doesNotContain("RESULT: PASS");
+    }
+
+    @Test
+    void foldWritesGateJsonAScriptCanTrust() throws Exception {
+        assertThat(DifCli.run(new String[]{
+                "fold",
+                "--canvas",
+                "examples/canvases/FEAT-001-order-status-api.md",
+                "--out",
+                tempDir.toString()
+        })).isZero();
+
+        var gate = new com.fasterxml.jackson.databind.ObjectMapper()
+                .readValue(tempDir.resolve("FEAT-001-order-status-api.gate.json").toFile(), GateReport.class);
+        assertThat(gate.workId()).isEqualTo("FEAT-001-order-status-api");
+        assertThat(gate.readyForImplementation()).isTrue();
+        assertThat(gate.blockingConflicts()).isEmpty();
+        assertThat(gate.missingObligations()).anyMatch(text -> text.contains("T03"));
     }
 
     @Test
