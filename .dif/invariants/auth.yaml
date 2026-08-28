@@ -1,0 +1,18 @@
+id: INV-001
+statement: A consumed refresh token cannot be reused.
+strategy: JUNIT
+derivedFrom:
+  - INT-001
+---
+id: INV-JWT-SESSION-TOKEN
+statement: sessionToken claim must remain backward compatible
+strategy: API_CONTRACT
+derivedFrom:
+  - type: TEST
+    source: JwtClaimsTest
+  - type: CODE
+    source: AuthTokenReader
+  - type: GIT_COMMIT
+    source: 7e93982
+  - type: USER_REQUIREMENT
+    source: CHANGE-REQUEST-42

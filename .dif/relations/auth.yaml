@@ -1,0 +1,9 @@
+- from: INV-001
+  type: DERIVED_FROM
+  to: INT-001
+- from: INV-JWT-SESSION-TOKEN
+  type: PRESERVES
+  to: INT-005
+- from: INT-005
+  type: DERIVED_FROM
+  to: E1
