@@ -36,7 +36,7 @@ index 7470623..347ed60 100644
      vocabulary value (see Output). Prefer Title Case aliases agents already use.
 +14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    `architect --quiet --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
 +    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
 +    the script is missing, continue — that is not an error. Do not start a JVM
 +    from `sdlc.sh next` or `sdlc.sh gate`.
@@ -53,7 +53,7 @@ index dbc9603..ab76f1e 100644
  15. If no task is selected, ask which approved operation to implement before changing code.
 +16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `architect --quiet --canvas` on this Work ID. Exit 1: STOP and recommend
 +    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
 +    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
  ---END---
@@ -65,7 +65,7 @@ index dbc9603..ab76f1e 100644
  14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
 +15. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `architect --quiet --canvas` on this Work ID. Exit 1: STOP and recommend
 +    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
 +    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
  
@@ -77,7 +77,7 @@ index dbc9603..ab76f1e 100644
  15. If no task is selected, ask which approved operation to implement before changing code.
 +16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `architect --quiet --canvas` on this Work ID. Exit 1: STOP and recommend
 +    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
 +    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
  ---END---
@@ -92,7 +92,7 @@ index 734fbf1..a469625 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -108,7 +108,7 @@ index a1772d8..2b6dc9b 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -124,7 +124,7 @@ index f8c405a..21faa05 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -141,7 +141,7 @@ index becd2ff..4c4996f 100644
      vocabulary value (see Output). Prefer Title Case aliases agents already use.
 +14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    `architect --quiet --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
 +    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
 +    the script is missing, continue — that is not an error. Do not start a JVM
 +    from `sdlc.sh next` or `sdlc.sh gate`.
@@ -158,7 +158,7 @@ index be7b52e..5e5cb00 100644
  15. If no task is selected, ask which approved operation to implement before changing code.
 +16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `architect --quiet --canvas` on this Work ID. Exit 1: STOP and recommend
 +    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
 +    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
  
@@ -173,7 +173,7 @@ index 4ed7a57..b2c5453 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -189,7 +189,7 @@ index f73008f..13479a4 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -206,7 +206,7 @@ index 9a712dd..cd9b117 100644
      vocabulary value (see Output). Prefer Title Case aliases agents already use.
 +14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    `architect --quiet --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
 +    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
 +    the script is missing, continue — that is not an error. Do not start a JVM
 +    from `sdlc.sh next` or `sdlc.sh gate`.
@@ -223,7 +223,7 @@ index a7fd1f4..5b95b67 100644
  14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
 +15. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `architect --quiet --canvas` on this Work ID. Exit 1: STOP and recommend
 +    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
 +    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
  
@@ -238,7 +238,7 @@ index 58e00a6..9addc25 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -254,7 +254,7 @@ index f8c405a..21faa05 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.
@@ -271,7 +271,7 @@ index becd2ff..4c4996f 100644
      vocabulary value (see Output). Prefer Title Case aliases agents already use.
 +14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    `architect --quiet --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
 +    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
 +    the script is missing, continue — that is not an error. Do not start a JVM
 +    from `sdlc.sh next` or `sdlc.sh gate`.
@@ -288,7 +288,7 @@ index be7b52e..5e5cb00 100644
  15. If no task is selected, ask which approved operation to implement before changing code.
 +16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
 +    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
-+    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `architect --quiet --canvas` on this Work ID. Exit 1: STOP and recommend
 +    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
 +    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
  
@@ -303,7 +303,7 @@ index 4ed7a57..b2c5453 100644
  9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
  10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
 +11. Optional DIF check (never required). If the DIF CLI exists for the active
-+    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    canvas, run `architect --quiet --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
 +    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
 +    missing, continue — that is not an error. Do not start a JVM from
 +    `sdlc.sh next` or `sdlc.sh gate`.

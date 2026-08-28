@@ -325,11 +325,13 @@ without a human recalling the commands.
 ### Slice 3 — Silent detect-and-skip on existing commands
 
 **Here + orch repo.** `scripts/orch-attach/check-canvas.sh` is the hook
-existing architect / code / `next` templates may call. Missing CLI is
-skip (`dif=skipped`, exit 0). Exit 1 means Needs Clarification — not
-Ready For Coding. Do not add a user-facing `dif-fold.sh next`. Do not
-wire orch review to the login snapshot fixtures. `sdlc.sh gate`
-behavior is unchanged when the CLI is absent.
+existing architect / code / `next` templates may call. It runs
+`architect --quiet` and prints one line (`dif=ready`, `dif=blocked`, or
+`dif=skipped`). Missing CLI is skip (exit 0). Exit 1 means Needs
+Clarification — not Ready For Coding. Agents do not get a fold dump.
+Do not add a user-facing `dif-fold.sh next`. Do not wire orch review to
+the login snapshot fixtures. `sdlc.sh gate` behavior is unchanged when
+the CLI is absent.
 
 **Done when:** orch CI with no `embabel-dif` checkout is green, and a
 present CLI on FEAT-099 stops architect from setting Ready For Coding.

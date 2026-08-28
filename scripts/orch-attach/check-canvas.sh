@@ -47,7 +47,7 @@ else
 fi
 
 set +e
-"${cli}" architect --canvas "${canvas}" --out "${out}"
+"${cli}" architect --quiet --canvas "${canvas}" --out "${out}"
 code=$?
 set -e
 exit "${code}"
