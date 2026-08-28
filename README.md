@@ -11,6 +11,8 @@ Verifier = deterministic acceptance boundary
 
 This is **not** an implementation of any proprietary Merly DIF algorithm. It is an experiment from the spec in [`docs/DIF_EMBABEL_PROTOTYPE.md`](docs/DIF_EMBABEL_PROTOTYPE.md).
 
+Related: [`docs/RELATIONSHIP_SDLC_SPDD.md`](docs/RELATIONSHIP_SDLC_SPDD.md) — how this fold/verify layer could sit under the REASONS Canvas in [`jmjava/sdlc-spdd-orchestrator`](https://github.com/jmjava/sdlc-spdd-orchestrator) without becoming that repo's runtime.
+
 ## What is stubbed
 
 | Phase | Status |
