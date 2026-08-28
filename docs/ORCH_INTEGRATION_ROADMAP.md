@@ -19,6 +19,12 @@ is the **operating and test plan** for step 2 of that path:
 4. Optional project invariants into Guide   (last)
 ```
 
+The public cut of this plan is
+[BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md). **How far:** DIF
+does not become a second daily driver. Users keep `sdlc.sh next`. When
+the CLI is present, architect / code fail closed. When it is absent, the
+day is unchanged. Do not add `dif-fold.sh next`.
+
 ---
 
 ## 1. What “full integration” means
@@ -211,10 +217,10 @@ Docker, Neo4j, and sibling clones of orch + Guide:
 | Requirement vs non-goal → architect exit `1` | Working (`FEAT-099`) |
 | Review CLI can fail a fixture snapshot | Working (`login-auth-broken`) |
 | `sdlc-engine` 2.0.0a6 + `embabel-neo4j` healthy + fold | Working in the three-way env |
-| Orch templates / `sdlc.sh gate` call DIF | **Not started** |
-| Stable `.gate.json` for a Python helper to read | **Missing** |
-| `IntentDiff.render()` RESULT line | **Dishonest** (`passed()` is always `true`; the verifier still fails some fixtures) |
-| Non-goals classified as `CONSTRAINT` only | **Leaky** (they also become `Preserve: Non-goal: …` invariants) |
+| Orch templates / `sdlc.sh gate` call DIF | Hook scripts here; orch specs next |
+| Stable `.gate.json` for a Python helper to read | Working |
+| `IntentDiff.render()` RESULT line | Working (`RESULT: FAIL` when a required path is removed) |
+| Non-goals classified as `CONSTRAINT` only | Working (no `Preserve: Non-goal:` invariants) |
 | Review against a *real* orch diff, not login fixtures | **Not started** |
 | Embabel required for `next` | Must stay false |
 
@@ -234,8 +240,8 @@ idea does not apply; skipping the test is not.
 | --- | --- | --- | --- |
 | **A. Fold contract** | this repo | Five checks in `FoldContractTest` | Already done |
 | **B. Harvested orch canvases** | this repo `examples/canvases/` | Real REASONS files, not imagined IR | Started; keep adding when a pair escapes |
-| **C. Honest gates** | this repo CLI | Exit codes and render a machine can trust | `.gate.json` written; `IntentDiff.passed()` equals `preserves(required)`; non-goals are not Preserve invariants |
-| **D. Sibling dry-run** | this VM / Cloud Agent env | `dif-fold.sh` on orch `FEAT-001` and `FEAT-099` | Exit 0 + T03; exit 1 on pagination clash — already run by hand; script it |
+| **C. Honest gates** | this repo CLI | Exit codes and render a machine can trust | Done (`.gate.json`; honest `IntentDiff`; non-goals stay CONSTRAINT) |
+| **D. Sibling dry-run** | this VM / Cloud Agent env | `dif-fold.sh` / `check-canvas.sh` on orch canvases | `dif-orch-smoke.sh` |
 | **E. Orch detect-and-skip** | orch repo | Missing CLI does not break `gate` / slash commands | A unit test with `DIF_HOME` unset matches today’s output |
 | **F. Orch fail-closed** | orch repo | Fixture CLI exit `1` blocks Ready For Coding / review | Architect template + `advance` into `code` refuse; review command stops |
 | **G. One Work ID loop** | orch example or live-consumer seed | Plan → fold → architect → (fake) code → review on one canvas | A scripted session, no Embabel, no Guide required |
@@ -298,6 +304,7 @@ Ordered so each slice can ship without the next.
 
 **Done when:** a Python one-liner can decide Ready For Coding from
 `.gate.json` alone, and `login-auth-broken` cannot print `RESULT: PASS`.
+**Done.**
 
 ### Slice 2 — Script the sibling dry-run in the three-way env
 
@@ -315,14 +322,17 @@ Do not start Embabel or Guide MCP for this slice.
 **Done when:** a fresh agent can run the smoke after `start.sh`
 without a human recalling the commands.
 
-### Slice 3 — Detect-and-skip attach in the orchestrator
+### Slice 3 — Silent detect-and-skip on existing commands
 
-**Orch repo.** `resolve-dif-cli.sh` + one sentence in architect,
-review, and `next` templates. `sdlc.sh gate` behavior unchanged when
-the CLI is absent.
+**Here + orch repo.** `scripts/orch-attach/check-canvas.sh` is the hook
+existing architect / code / `next` templates may call. Missing CLI is
+skip (`dif=skipped`, exit 0). Exit 1 means Needs Clarification — not
+Ready For Coding. Do not add a user-facing `dif-fold.sh next`. Do not
+wire orch review to the login snapshot fixtures. `sdlc.sh gate`
+behavior is unchanged when the CLI is absent.
 
-**Done when:** orch CI with no `embabel-dif` checkout is green and
-byte-identical to today on gate output.
+**Done when:** orch CI with no `embabel-dif` checkout is green, and a
+present CLI on FEAT-099 stops architect from setting Ready For Coding.
 
 ### Slice 4 — Fail-closed attach on one Work ID
 
@@ -391,6 +401,7 @@ The idea is wrong — or we stop — if:
 - Require Guide or `OPENAI_API_KEY` for architect / review.
 - Treat `.dif/projections/` as the design contract.
 - Start slice 3 in the orch repo before slice 1 is honest.
+- Add a second `next` / daily ritual users must learn.
 
 The daily process stays claim → next → one phase → one T##. DIF only
 changes what “Ready For Coding” and “review passed” are allowed to
