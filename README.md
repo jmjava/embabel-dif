@@ -69,6 +69,7 @@ src/main/java/com/embabel/dif/
 
 ```bash
 ./mvnw test
+./scripts/dif-orch-smoke.sh
 ./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/dif-fold.sh architect --projection .dif/projections/FEAT-099-pagination-conflict.json
 ./scripts/dif-fold.sh review --before examples/snapshots/login-before.json --after examples/snapshots/login-auth-broken.json
@@ -76,11 +77,15 @@ src/main/java/com/embabel/dif/
 ./scripts/shell.sh
 ```
 
-`dif-fold` does not start Embabel. `fold` writes `.dif/projections/<WORK-ID>.json`.
+`dif-fold` does not start Embabel. `fold` writes `.dif/projections/<WORK-ID>.json`
+and a stable `.gate.json` (`readyForImplementation`, `blockingConflicts`,
+`missingObligations`) that a script can read without parsing stdout.
 `architect` and `review` fail closed from a projection or `IntentDiff` (exit `1`
 = not Ready For Coding / invariants not preserved). `plan` builds a
 `VerificationPlan` from the folded model. `--guide` / `guide` writes optional
 Guide JSONL. `--alloy` writes an Alloy sketch; no extra binary is required.
+`dif-orch-smoke.sh` folds the harvested orch canvases and asserts those exit
+codes plus `.gate.json`.
 
 In the Embabel shell:
 

@@ -45,6 +45,8 @@ class CanvasFolderTest {
                         && obligation.derivedFromIntent().equals("FEAT-001-order-status-api"));
         assertThat(model.missingObligations())
                 .noneMatch(obligation -> obligation.obligation().contains("T01"));
+        assertThat(model.invariants())
+                .noneMatch(invariant -> invariant.description().toLowerCase().contains("non-goal"));
     }
 
     @Test

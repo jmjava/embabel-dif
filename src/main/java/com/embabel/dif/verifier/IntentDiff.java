@@ -13,14 +13,34 @@ public record IntentDiff(
         List<SemanticProperty> removed,
         List<SemanticProperty> unchanged
 ) {
+    /**
+     * Login/JWT paths the prototype must not drop. A review of snapshots that
+     * never contained these keys still {@link #passed() passes}; only removal
+     * (or a value change, which appears in {@code removed}) fails.
+     */
+    public static final Set<String> DEFAULT_REQUIRED_PATHS = Set.of(
+            "provider.GOOGLE",
+            "provider.APPLE",
+            "jwt.claim.sessionToken"
+    );
+
     public IntentDiff {
         added = List.copyOf(added);
         removed = List.copyOf(removed);
         unchanged = List.copyOf(unchanged);
     }
 
+    /**
+     * Fail closed when a required safeguard path was removed or changed.
+     * Stricter “must still be present” is {@link #preserves(Set)}.
+     */
     public boolean passed() {
-        return true;
+        return passed(DEFAULT_REQUIRED_PATHS);
+    }
+
+    public boolean passed(Set<String> requiredPaths) {
+        var removedPaths = removed.stream().map(SemanticProperty::path).toList();
+        return requiredPaths.stream().noneMatch(removedPaths::contains);
     }
 
     public boolean preserves(Set<String> requiredPaths) {

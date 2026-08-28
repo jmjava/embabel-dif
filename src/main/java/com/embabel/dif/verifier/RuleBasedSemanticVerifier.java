@@ -20,11 +20,7 @@ import java.util.Set;
 @Component
 public class RuleBasedSemanticVerifier implements SemanticVerifier {
 
-    public static final Set<String> REQUIRED_UNCHANGED = Set.of(
-            "provider.GOOGLE",
-            "provider.APPLE",
-            "jwt.claim.sessionToken"
-    );
+    public static final Set<String> REQUIRED_UNCHANGED = IntentDiff.DEFAULT_REQUIRED_PATHS;
 
     @Override
     public IntentDiff diff(SemanticSnapshot before, SemanticSnapshot desired) {

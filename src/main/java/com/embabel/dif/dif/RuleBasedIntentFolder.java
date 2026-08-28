@@ -161,7 +161,9 @@ public class RuleBasedIntentFolder implements IntentFolder {
                     related
             ));
         }
-        if (derived.isEmpty() && (intent.type() == IntentType.PRESERVATION || intent.type() == IntentType.CONSTRAINT)) {
+        // Non-goals stay CONSTRAINT for ConflictDetector. They are not
+        // "Preserve: Non-goal: …" invariants. // goal/safety: intent-lang
+        if (derived.isEmpty() && intent.type() == IntentType.PRESERVATION) {
             derived.add(new Invariant(
                     "INV-" + shortHash(statement),
                     "Preserve: " + intent.statement(),
