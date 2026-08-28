@@ -69,7 +69,7 @@ public class ReasonsCanvasParser {
                 continue;
             }
 
-            if (h2.isEmpty()) {
+            if (h2.isEmpty() || h2.contains("metadata")) {
                 var meta = METADATA.matcher(line);
                 if (meta.matches()) {
                     metadata.put(normalizeKey(meta.group(1)), meta.group(2).trim());
@@ -162,7 +162,7 @@ public class ReasonsCanvasParser {
 
     private static String workIdFromTitle(String title) {
         var matcher = Pattern.compile("(FEAT|BUG|SPIKE|CHORE)-[A-Z0-9-]+", Pattern.CASE_INSENSITIVE).matcher(title);
-        return matcher.find() ? matcher.group().toUpperCase(Locale.ROOT) : "";
+        return matcher.find() ? matcher.group() : "";
     }
 
     private static String firstNonBlank(String... values) {
