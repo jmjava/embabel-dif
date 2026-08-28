@@ -1,5 +1,8 @@
 # How `embabel-dif` could help `sdlc-spdd-orchestrator`
 
+The argument behind this attachment is in [REASONING.md](REASONING.md).
+This page is the concrete mapping.
+
 The orchestrator is an **installable operating model**: one Work ID, one REASONS
 Canvas, one phase at a time, across Cursor / Copilot / Claude. It is not an
 Embabel runtime.

@@ -9,9 +9,17 @@ Embabel = deterministic planner / orchestrator
 Verifier = deterministic acceptance boundary
 ```
 
-This is **not** an implementation of any proprietary Merly DIF algorithm. It is an experiment from the spec in [`docs/DIF_EMBABEL_PROTOTYPE.md`](docs/DIF_EMBABEL_PROTOTYPE.md).
+This is **not** an implementation of any proprietary Merly DIF algorithm.
 
-Related: [`docs/RELATIONSHIP_SDLC_SPDD.md`](docs/RELATIONSHIP_SDLC_SPDD.md) — how this fold/verify layer could sit under the REASONS Canvas in [`jmjava/sdlc-spdd-orchestrator`](https://github.com/jmjava/sdlc-spdd-orchestrator) without becoming that repo's runtime.
+**Start with the reasoning, then the spec:**
+
+| Doc | Job |
+| --- | --- |
+| [`docs/REASONING.md`](docs/REASONING.md) | Why this exists, why Embabel, why the orchestrator, DICE vs DIF, the path |
+| [`docs/DIF_EMBABEL_PROTOTYPE.md`](docs/DIF_EMBABEL_PROTOTYPE.md) | What to build (IR, fold, planner, verifier, phases) |
+| [`docs/RELATIONSHIP_SDLC_SPDD.md`](docs/RELATIONSHIP_SDLC_SPDD.md) | How a REASONS Canvas becomes a checkable projection |
+
+Index: [`docs/README.md`](docs/README.md).
 
 ## What is stubbed
 
