@@ -218,6 +218,12 @@ part that must not leak into the orchestrator’s runtime.
 Guide last: retrieval already works. Vocabulary alignment is not a
 prerequisite for checkability.
 
+The live proof does not invent a second stack. The orchestrator already
+boots Guide+Neo4j (`tests/test-guide-stack-live.sh`). DIF's
+`scripts/dif-live-e2e.sh` reuses that harness, quotes a fold through
+the existing `GuideClient`, then boots Embabel as a sibling process.
+`sdlc.sh next` still does not start either.
+
 ---
 
 ## What would falsify this

@@ -73,8 +73,10 @@ public class DifEmbabelAgent {
             description = "Intent has been folded into typed semantic state and a verification plan is ready",
             export = @Export(remote = true, name = "planSemanticVerification")
     )
-    @Action(pre = {"noBlockingIntentConflicts"})
+    @Action
     public VerificationPlan planVerification(SemanticModel semanticModel, RepositoryAnalysis analysis) {
+        // Conflicts stay on the plan (readyForImplementation=false). Do not hide
+        // them behind a GOAP pre that Embabel 1.5 cannot treat as an action post.
         return verificationPlanner.plan(semanticModel, analysis);
     }
 }

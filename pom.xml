@@ -43,6 +43,12 @@
             <groupId>com.embabel.agent</groupId>
             <artifactId>embabel-agent-starter-shell</artifactId>
         </dependency>
+        <!-- Embabel 1.5.1 pulls ChatClient 2.0.0 which @Imports this module. -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-autoconfigure-model-tool</artifactId>
+            <version>2.0.0</version>
+        </dependency>
         <dependency>
             <groupId>com.embabel.agent</groupId>
             <artifactId>embabel-agent-test</artifactId>

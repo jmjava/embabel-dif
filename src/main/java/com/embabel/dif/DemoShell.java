@@ -2,6 +2,7 @@ package com.embabel.dif;
 
 import com.embabel.agent.api.invocation.AgentInvocation;
 import com.embabel.agent.core.AgentPlatform;
+import com.embabel.agent.domain.io.UserInput;
 import com.embabel.dif.dif.IntentFolder;
 import com.embabel.dif.domain.VerificationPlan;
 import com.embabel.dif.scenario.RefreshTokenScenario;
@@ -20,7 +21,7 @@ record DemoShell(
     String fold() {
         var plan = AgentInvocation
                 .create(agentPlatform, VerificationPlan.class)
-                .invoke(RefreshTokenScenario.request());
+                .invoke(new UserInput(RefreshTokenScenario.REQUEST_TEXT));
         return render(plan);
     }
 

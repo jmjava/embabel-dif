@@ -385,6 +385,17 @@ still works.
 the folded model. Live Embabel / Guide ingest stay optional and must
 not be required for `next`.
 
+**Live E2E reuses the orch environment, does not invent a second
+stack.** The orchestrator already boots Guide+Neo4j via
+`SDLC_GUIDE_STACK_LIVE=1 ./tests/test-guide-stack-live.sh` (installer
+APIs, NamedEntity projection, `GuideClient` persist/retrieve,
+`engine/tests_e2e/test_guide_projection_roundtrip.py`). DIF's
+`scripts/dif-live-e2e.sh` calls that harness with `GUIDE_KEEP=1`, then
+quotes a fold through the same `ContextStore.persist_lesson` /
+`GuideClient.work_subgraph` path, then boots Embabel
+(`EmbabelLivePlatformTest`, `DIF_LIVE_EMBABEL=1`). Do not add a
+second Neo4j, a second ingest, or a JVM inside `next`.
+
 ---
 
 ## 7. What would count as a failed integration
