@@ -7,7 +7,9 @@ changes `sdlc-engine`.
 Attachment shape and success criteria stay in
 [RELATIONSHIP_SDLC_SPDD.md](RELATIONSHIP_SDLC_SPDD.md). Why the two
 repos stay separate is in [REASONING.md](REASONING.md) §8–9. How the
-fold itself grows is [FOLD_ITERATION.md](FOLD_ITERATION.md). This page
+fold itself grows is [FOLD_ITERATION.md](FOLD_ITERATION.md). The
+blog / generation-tool cut of the same plan is
+[BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md). This page
 is the **operating and test plan** for step 2 of that path:
 
 ```text

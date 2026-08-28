@@ -6,7 +6,10 @@ orchestrator note says how the two repos attach. The
 and grow the rule catalog. The
 [integration roadmap](ORCH_INTEGRATION_ROADMAP.md) says how the attach
 enters a developer’s day and how we test that before touching
-`sdlc-engine`. This page is the argument that justifies those.
+`sdlc-engine`. The
+[publication source](BLOG_DIF_ORCH_EMBABEL.md) is the same plan in a
+form a blog / generation tool can quote. This page is the argument
+that justifies those.
 
 It is also a record of decisions so a later session does not reconstruct a
 slightly different story from the code.
