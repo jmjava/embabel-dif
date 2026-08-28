@@ -9,13 +9,24 @@ Embabel = deterministic planner / orchestrator
 Verifier = deterministic acceptance boundary
 ```
 
-This is **not** an implementation of any proprietary Merly DIF algorithm. It is an experiment from the spec in [`docs/DIF_EMBABEL_PROTOTYPE.md`](docs/DIF_EMBABEL_PROTOTYPE.md).
+This is **not** an implementation of any proprietary Merly DIF algorithm.
+
+**Start with the reasoning, then the spec:**
+
+| Doc | Job |
+| --- | --- |
+| [`docs/REASONING.md`](docs/REASONING.md) | Why this exists, why Embabel, why the orchestrator, DICE vs DIF, the path |
+| [`docs/DIF_EMBABEL_PROTOTYPE.md`](docs/DIF_EMBABEL_PROTOTYPE.md) | What to build (IR, fold, planner, verifier, phases) |
+| [`docs/RELATIONSHIP_SDLC_SPDD.md`](docs/RELATIONSHIP_SDLC_SPDD.md) | How a REASONS Canvas becomes a checkable projection |
+
+Index: [`docs/README.md`](docs/README.md).
 
 ## What is stubbed
 
 | Phase | Status |
 | --- | --- |
 | 1. Typed semantic model + deterministic fold | Working |
+| 1b. REASONS canvas → SemanticModel CLI | Working (`./scripts/dif-fold.sh`) |
 | 2. Embabel GOAP to `VerificationPlan` | Working (fixture path, no LLM required) |
 | 3. LLM code generation | Stub (`LaterPhaseActions`) |
 | 4. Deterministic verification | Semantic diff works; code/test checks stubbed |
@@ -56,8 +67,13 @@ src/main/java/com/embabel/dif/
 
 ```bash
 ./mvnw test
+./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/shell.sh
 ```
+
+`dif-fold` does not start Embabel. It reads a REASONS Canvas and writes
+`.dif/projections/<WORK-ID>.json` plus a text summary. Exit `1` means blocking
+intent conflicts (architect should not mark Ready For Coding).
 
 In the Embabel shell:
 
