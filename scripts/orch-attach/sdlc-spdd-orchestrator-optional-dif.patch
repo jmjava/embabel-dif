@@ -1,0 +1,349 @@
+From 20b40bbe9b4586ffdd9750230442bc3a57ca110a Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Fri, 28 Aug 2026 18:15:44 +0000
+Subject: [PATCH] Optional DIF check on architect, code, and next.
+
+When a sibling embabel-dif CLI is present, those commands fail closed
+on a contradictory canvas. When it is missing, the day is unchanged.
+sdlc-engine does not start a JVM.
+---
+ spec/commands/lifecycle-architect.spec.md        |  6 ++++++
+ spec/commands/lifecycle-code.spec.md             | 15 +++++++++++++++
+ spec/commands/lifecycle-whereami.spec.md         |  5 +++++
+ spec/commands/workflow-next.spec.md              |  5 +++++
+ templates/claude/commands/sdlc-next.md           |  5 +++++
+ templates/claude/commands/sdlc-spdd-architect.md |  6 ++++++
+ templates/claude/commands/sdlc-spdd-code.md      |  5 +++++
+ templates/claude/commands/sdlc-spdd-whereami.md  |  5 +++++
+ templates/copilot/prompts/sdlc-next.prompt.md    |  5 +++++
+ .../prompts/sdlc-spdd-architect.prompt.md        |  6 ++++++
+ .../copilot/prompts/sdlc-spdd-code.prompt.md     |  5 +++++
+ .../copilot/prompts/sdlc-spdd-whereami.prompt.md |  5 +++++
+ templates/cursor/sdlc-next.md                    |  5 +++++
+ templates/cursor/sdlc-spdd-architect.md          |  6 ++++++
+ templates/cursor/sdlc-spdd-code.md               |  5 +++++
+ templates/cursor/sdlc-spdd-whereami.md           |  5 +++++
+ tests/test-command-specs.sh                      | 16 ++++++++++++++++
+ 17 files changed, 110 insertions(+)
+
+diff --git a/spec/commands/lifecycle-architect.spec.md b/spec/commands/lifecycle-architect.spec.md
+index 7470623..347ed60 100644
+--- a/spec/commands/lifecycle-architect.spec.md
++++ b/spec/commands/lifecycle-architect.spec.md
+@@ -58,6 +58,12 @@ Do not implement code.
+ 13. Mark whether the work is ready for coding by setting Metadata
+     `- Readiness:` (or YAML frontmatter `readiness:`) to a **canvas readiness**
+     vocabulary value (see Output). Prefer Title Case aliases agents already use.
++14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
++    the script is missing, continue — that is not an error. Do not start a JVM
++    from `sdlc.sh next` or `sdlc.sh gate`.
+ ---END---
+ ---BLOCK:shared:Context Backend (runtime-resolved)---
+ 
+diff --git a/spec/commands/lifecycle-code.spec.md b/spec/commands/lifecycle-code.spec.md
+index dbc9603..ab76f1e 100644
+--- a/spec/commands/lifecycle-code.spec.md
++++ b/spec/commands/lifecycle-code.spec.md
+@@ -57,6 +57,11 @@ Your job is to implement exactly one approved operation from a REASONS Canvas.
+ 13. Update task status in the canvas and stage progress evidence via `./scripts/sdlc.sh capture` (session record).
+ 14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
+ 15. If no task is selected, ask which approved operation to implement before changing code.
++16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
++    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
+ ---END---
+ ---BLOCK:copilot:Required Behavior---
+ 
+@@ -81,6 +86,11 @@ Your job is to implement exactly one approved operation from a REASONS Canvas.
+ 12. Do not add dependencies unless the canvas allows it.
+ 13. Update task status in the canvas and stage progress evidence via `./scripts/sdlc.sh capture` (session record).
+ 14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
++15. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
++    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ If no task is selected, ask the user which operation to implement before changing code.
+ ---END---
+@@ -109,6 +119,11 @@ If no task is selected, ask the user which operation to implement before changin
+ 13. Update task status in the canvas and stage progress evidence via `./scripts/sdlc.sh capture` (session record).
+ 14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
+ 15. If no task is selected, ask which approved operation to implement before changing code.
++16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
++    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
+ ---END---
+ ---BLOCK:shared:Context Backend (runtime-resolved)---
+ 
+diff --git a/spec/commands/lifecycle-whereami.spec.md b/spec/commands/lifecycle-whereami.spec.md
+index 734fbf1..a469625 100644
+--- a/spec/commands/lifecycle-whereami.spec.md
++++ b/spec/commands/lifecycle-whereami.spec.md
+@@ -48,6 +48,11 @@ Do not implement code.
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ ---END---
+ ---BLOCK:shared:Output---
+ 
+diff --git a/spec/commands/workflow-next.spec.md b/spec/commands/workflow-next.spec.md
+index a1772d8..2b6dc9b 100644
+--- a/spec/commands/workflow-next.spec.md
++++ b/spec/commands/workflow-next.spec.md
+@@ -48,6 +48,11 @@ Do not implement code.
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ ---END---
+ ---BLOCK:shared:Output---
+ 
+diff --git a/templates/claude/commands/sdlc-next.md b/templates/claude/commands/sdlc-next.md
+index f8c405a..21faa05 100644
+--- a/templates/claude/commands/sdlc-next.md
++++ b/templates/claude/commands/sdlc-next.md
+@@ -20,6 +20,11 @@ Do not implement code.
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Output
+ 
+diff --git a/templates/claude/commands/sdlc-spdd-architect.md b/templates/claude/commands/sdlc-spdd-architect.md
+index becd2ff..4c4996f 100644
+--- a/templates/claude/commands/sdlc-spdd-architect.md
++++ b/templates/claude/commands/sdlc-spdd-architect.md
+@@ -30,6 +30,12 @@ Do not implement code.
+ 13. Mark whether the work is ready for coding by setting Metadata
+     `- Readiness:` (or YAML frontmatter `readiness:`) to a **canvas readiness**
+     vocabulary value (see Output). Prefer Title Case aliases agents already use.
++14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
++    the script is missing, continue — that is not an error. Do not start a JVM
++    from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Context Backend (runtime-resolved)
+ 
+diff --git a/templates/claude/commands/sdlc-spdd-code.md b/templates/claude/commands/sdlc-spdd-code.md
+index be7b52e..5e5cb00 100644
+--- a/templates/claude/commands/sdlc-spdd-code.md
++++ b/templates/claude/commands/sdlc-spdd-code.md
+@@ -31,6 +31,11 @@ Your job is to implement exactly one approved operation from a REASONS Canvas.
+ 13. Update task status in the canvas and stage progress evidence via `./scripts/sdlc.sh capture` (session record).
+ 14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
+ 15. If no task is selected, ask which approved operation to implement before changing code.
++16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
++    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Context Backend (runtime-resolved)
+ 
+diff --git a/templates/claude/commands/sdlc-spdd-whereami.md b/templates/claude/commands/sdlc-spdd-whereami.md
+index 4ed7a57..b2c5453 100644
+--- a/templates/claude/commands/sdlc-spdd-whereami.md
++++ b/templates/claude/commands/sdlc-spdd-whereami.md
+@@ -20,6 +20,11 @@ Do not implement code.
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Output
+ 
+diff --git a/templates/copilot/prompts/sdlc-next.prompt.md b/templates/copilot/prompts/sdlc-next.prompt.md
+index f73008f..13479a4 100644
+--- a/templates/copilot/prompts/sdlc-next.prompt.md
++++ b/templates/copilot/prompts/sdlc-next.prompt.md
+@@ -23,6 +23,11 @@ Show where the user is in the workflow and what to do next. Alias for `/sdlc-spd
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Output
+ 
+diff --git a/templates/copilot/prompts/sdlc-spdd-architect.prompt.md b/templates/copilot/prompts/sdlc-spdd-architect.prompt.md
+index 9a712dd..cd9b117 100644
+--- a/templates/copilot/prompts/sdlc-spdd-architect.prompt.md
++++ b/templates/copilot/prompts/sdlc-spdd-architect.prompt.md
+@@ -33,6 +33,12 @@ Review and harden a REASONS Canvas before implementation. Do not implement code.
+ 13. Mark whether the work is ready for coding by setting Metadata
+     `- Readiness:` (or YAML frontmatter `readiness:`) to a **canvas readiness**
+     vocabulary value (see Output). Prefer Title Case aliases agents already use.
++14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
++    the script is missing, continue — that is not an error. Do not start a JVM
++    from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Context Backend (runtime-resolved)
+ 
+diff --git a/templates/copilot/prompts/sdlc-spdd-code.prompt.md b/templates/copilot/prompts/sdlc-spdd-code.prompt.md
+index a7fd1f4..5b95b67 100644
+--- a/templates/copilot/prompts/sdlc-spdd-code.prompt.md
++++ b/templates/copilot/prompts/sdlc-spdd-code.prompt.md
+@@ -34,6 +34,11 @@ Implement exactly one approved operation from a REASONS Canvas.
+ 12. Do not add dependencies unless the canvas allows it.
+ 13. Update task status in the canvas and stage progress evidence via `./scripts/sdlc.sh capture` (session record).
+ 14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
++15. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
++    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ If no task is selected, ask the user which operation to implement before changing code.
+ 
+diff --git a/templates/copilot/prompts/sdlc-spdd-whereami.prompt.md b/templates/copilot/prompts/sdlc-spdd-whereami.prompt.md
+index 58e00a6..9addc25 100644
+--- a/templates/copilot/prompts/sdlc-spdd-whereami.prompt.md
++++ b/templates/copilot/prompts/sdlc-spdd-whereami.prompt.md
+@@ -23,6 +23,11 @@ Show the user exactly where they are in the workflow and what to do next. Do not
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Output
+ 
+diff --git a/templates/cursor/sdlc-next.md b/templates/cursor/sdlc-next.md
+index f8c405a..21faa05 100644
+--- a/templates/cursor/sdlc-next.md
++++ b/templates/cursor/sdlc-next.md
+@@ -20,6 +20,11 @@ Do not implement code.
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Output
+ 
+diff --git a/templates/cursor/sdlc-spdd-architect.md b/templates/cursor/sdlc-spdd-architect.md
+index becd2ff..4c4996f 100644
+--- a/templates/cursor/sdlc-spdd-architect.md
++++ b/templates/cursor/sdlc-spdd-architect.md
+@@ -30,6 +30,12 @@ Do not implement code.
+ 13. Mark whether the work is ready for coding by setting Metadata
+     `- Readiness:` (or YAML frontmatter `readiness:`) to a **canvas readiness**
+     vocabulary value (see Output). Prefer Title Case aliases agents already use.
++14. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas spdd/canvas/<WORK-ID>.md`. Exit 1: set Readiness to
++    Needs Clarification; do not set Ready For Coding; quote the conflicts. If
++    the script is missing, continue — that is not an error. Do not start a JVM
++    from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Context Backend (runtime-resolved)
+ 
+diff --git a/templates/cursor/sdlc-spdd-code.md b/templates/cursor/sdlc-spdd-code.md
+index be7b52e..5e5cb00 100644
+--- a/templates/cursor/sdlc-spdd-code.md
++++ b/templates/cursor/sdlc-spdd-code.md
+@@ -31,6 +31,11 @@ Your job is to implement exactly one approved operation from a REASONS Canvas.
+ 13. Update task status in the canvas and stage progress evidence via `./scripts/sdlc.sh capture` (session record).
+ 14. If the requested behavior conflicts with the canvas, stop and recommend `/sdlc-spdd-prompt-update` before changing code.
+ 15. If no task is selected, ask which approved operation to implement before changing code.
++16. Optional DIF check (never required). If `$DIF_HOME/scripts/dif-fold.sh` or a
++    sibling `../embabel-dif/scripts/dif-fold.sh` exists, run
++    `architect --canvas` on this Work ID. Exit 1: STOP and recommend
++    `/sdlc-spdd-architect` — do not implement. If the script is missing, continue
++    — that is not an error. Do not start a JVM from `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Context Backend (runtime-resolved)
+ 
+diff --git a/templates/cursor/sdlc-spdd-whereami.md b/templates/cursor/sdlc-spdd-whereami.md
+index 4ed7a57..b2c5453 100644
+--- a/templates/cursor/sdlc-spdd-whereami.md
++++ b/templates/cursor/sdlc-spdd-whereami.md
+@@ -20,6 +20,11 @@ Do not implement code.
+ 8. When `next` / status / session brief shows Jira as `missing` or `draft`, ask the user for the issue key (or confirm none applies) before coding or claiming tracker progress; then `claim --jira KEY` or set `- Key:` on the requirement. Do not invent a key.
+ 9. When `next` / status shows canvas readiness that blocks coding (Needs Analysis, Needs Clarification, Needs Redesign, Blocked), prefer `/sdlc-spdd-architect` (or prompt-update) over `/sdlc-spdd-code`, even if the stored phase is `code`.
+ 10. Do not start unrelated work or implement code on a Work ID claimed by another teammate (non-stale).
++11. Optional DIF check (never required). If the DIF CLI exists for the active
++    canvas, run `architect --canvas`. Exit 1: prefer `/sdlc-spdd-architect` over
++    `/sdlc-spdd-code` even if the stored phase is `code`. If the script is
++    missing, continue — that is not an error. Do not start a JVM from
++    `sdlc.sh next` or `sdlc.sh gate`.
+ 
+ ## Output
+ 
+diff --git a/tests/test-command-specs.sh b/tests/test-command-specs.sh
+index e557b4c..44c8846 100755
+--- a/tests/test-command-specs.sh
++++ b/tests/test-command-specs.sh
+@@ -114,6 +114,12 @@ for spec in \
+ done
+ assert_contains "${SPEC_DIR}/lifecycle-code.spec.md" "Ready For Coding" \
+   "lifecycle-code encodes readiness gate"
++assert_contains "${SPEC_DIR}/lifecycle-architect.spec.md" "Optional DIF check" \
++  "lifecycle-architect encodes optional DIF gate"
++assert_contains "${SPEC_DIR}/lifecycle-code.spec.md" "Optional DIF check" \
++  "lifecycle-code encodes optional DIF gate"
++assert_contains "${SPEC_DIR}/workflow-next.spec.md" "Optional DIF check" \
++  "workflow-next encodes optional DIF gate"
+ assert_contains "${SPEC_DIR}/workflow-advance.spec.md" "Ready For Coding" \
+   "workflow-advance encodes readiness gate"
+ assert_contains "${SPEC_DIR}/workflow-claim.spec.md" "--jira" \
+@@ -138,6 +144,16 @@ for adapter_file in \
+   "${REPO_ROOT}/templates/claude/commands/sdlc-spdd-code.md"; do
+   assert_contains "${adapter_file}" "Ready For Coding" \
+     "readiness in ${adapter_file#${REPO_ROOT}/templates/}"
++  assert_contains "${adapter_file}" "Optional DIF check" \
++    "optional DIF in ${adapter_file#${REPO_ROOT}/templates/}"
++done
++
++for adapter_file in \
++  "${REPO_ROOT}/templates/cursor/sdlc-spdd-architect.md" \
++  "${REPO_ROOT}/templates/copilot/prompts/sdlc-spdd-architect.prompt.md" \
++  "${REPO_ROOT}/templates/claude/commands/sdlc-spdd-architect.md"; do
++  assert_contains "${adapter_file}" "Optional DIF check" \
++    "optional DIF in ${adapter_file#${REPO_ROOT}/templates/}"
+ done
+ 
+ # ---------------------------------------------------------------------------
+-- 
+2.43.0
+

@@ -63,4 +63,20 @@ if [[ -f "$orch_canvas" ]]; then
   assert_gate "$orch_out/FEAT-001-order-status-api.gate.json" true T03
 fi
 
+attach="$(cd "$(dirname "$0")" && pwd)/orch-attach"
+set +e
+DIF_DISABLED=1 "${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-001-order-status-api.md --out "$out"
+skip_code=$?
+set -e
+test "$skip_code" = 0
+
+set +e
+"${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-001-order-status-api.md --out "$out"
+ready_code=$?
+"${attach}/check-canvas.sh" --canvas examples/canvases/FEAT-099-pagination-conflict.md --out "$out"
+block_code=$?
+set -e
+test "$ready_code" = 0
+test "$block_code" = 1
+
 echo "dif-orch-smoke: OK"
