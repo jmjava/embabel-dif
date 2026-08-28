@@ -131,6 +131,10 @@ Phase order that respects both repos:
 
 Do not make `sdlc-engine` depend on a JVM agent to run `next` / `gate`.
 
+How the fold itself iterates (steal checks from cousins, ten steps behind
+`IntentFolder`) is [FOLD_ITERATION.md](FOLD_ITERATION.md). That plan continues
+this attachment order; it does not replace it.
+
 ## What would count as success for the orchestrator
 
 The prototype success criteria in `DIF_EMBABEL_PROTOTYPE.md` translate directly:
