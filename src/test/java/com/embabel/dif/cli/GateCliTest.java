@@ -91,6 +91,71 @@ class GateCliTest {
     }
 
     @Test
+    void reviewFailsWhenOrchOrderStatusAuthSafeguardIsRemoved() throws Exception {
+        var stdout = captureStdout(() -> DifCli.run(new String[]{
+                "review",
+                "--quiet",
+                "--canvas",
+                "examples/canvases/FEAT-001-order-status-api.md",
+                "--before",
+                "examples/snapshots/order-status-before.json",
+                "--after",
+                "examples/snapshots/order-status-auth-broken.json"
+        }));
+
+        assertThat(stdout.code()).isEqualTo(1);
+        assertThat(stdout.text().strip()).isEqualTo(
+                "dif=blocked workId=FEAT-001-order-status-api passed=false");
+        assertThat(stdout.text()).doesNotContain("RESULT: PASS").doesNotContain("look correct");
+    }
+
+    @Test
+    void reviewPassesWhenOrchOrderStatusSyntaxChanges() throws Exception {
+        var stdout = captureStdout(() -> DifCli.run(new String[]{
+                "review",
+                "--quiet",
+                "--canvas",
+                "examples/canvases/FEAT-001-order-status-api.md",
+                "--before",
+                "examples/snapshots/order-status-before.json",
+                "--after",
+                "examples/snapshots/order-status-syntax-ok.json"
+        }));
+
+        assertThat(stdout.code()).isZero();
+        assertThat(stdout.text().strip()).isEqualTo(
+                "dif=ready workId=FEAT-001-order-status-api passed=true");
+    }
+
+    @Test
+    void planFromProjectionDoesNotNeedTheCanvas() throws Exception {
+        assertThat(DifCli.run(new String[]{
+                "fold",
+                "--quiet",
+                "--canvas",
+                "examples/canvases/FEAT-001-order-status-api.md",
+                "--out",
+                tempDir.toString()
+        })).isZero();
+
+        var stdout = captureStdout(() -> DifCli.run(new String[]{
+                "plan",
+                "--quiet",
+                "--projection",
+                tempDir.resolve("FEAT-001-order-status-api.json").toString(),
+                "--out",
+                tempDir.toString()
+        }));
+
+        assertThat(stdout.code()).isZero();
+        assertThat(stdout.text().strip()).isEqualTo(
+                "dif=ready workId=FEAT-001-order-status-api readyForImplementation=true");
+        assertThat(Files.readString(tempDir.resolve("FEAT-001-order-status-api.plan.json")))
+                .contains("T03")
+                .contains("\"readyForImplementation\" : true");
+    }
+
+    @Test
     void reviewFailsWhenRequiredLoginPropertyIsRemoved() throws Exception {
         var original = System.out;
         var buffer = new java.io.ByteArrayOutputStream();

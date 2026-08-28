@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Standalone fold and gate entry point. Does not start Embabel or Spring.
@@ -45,13 +46,15 @@ public final class DifCli {
                       fold --canvas <file> [--out <dir>] [--guide] [--alloy] [--quiet]
                       architect --canvas <file> [--out <dir>] [--quiet]
                       architect --projection <file> [--quiet]
-                      review --before <snapshot.json> --after <snapshot.json> [--canvas <file>]
+                      review --before <snapshot.json> --after <snapshot.json> [--canvas <file>] [--quiet]
                       plan --canvas <file> [--out <dir>]
+                      plan --projection <file> [--out <dir>]
                       guide --canvas <file> [--out <dir>]
                     
                     fold writes a deterministic SemanticModel projection and .gate.json.
                     architect / review fail closed from the projection or IntentDiff.
                     --quiet prints one line: dif=ready|blocked (orch attach).
+                    plan --projection reads a folded model; it does not re-parse markdown.
                     Exit 1 if blocking conflicts exist or review invariants fail.
                     """);
             return args.length == 0 ? 2 : 0;
@@ -213,44 +216,66 @@ public final class DifCli {
 
         var verifier = new RuleBasedSemanticVerifier();
         var diff = verifier.diff(before, after);
-        var verification = verifier.verify(
-                model,
-                new ProposedChange(List.of()),
-                new TestExecution(true, List.of()),
-                diff
-        );
-        System.out.println("review passed=" + verification.passed());
-        System.out.println(diff.render());
-        verification.results().forEach(result ->
-                System.out.println(result.status() + " " + result.invariantId()
-                        + result.failureReason().map(reason -> ": " + reason).orElse("")));
+        var canvasPaths = flags.canvasPath != null
+                ? com.embabel.dif.verifier.SafeguardPaths.fromCanvasSafeguards(model)
+                : Set.<String>of();
+        var verification = canvasPaths.isEmpty()
+                ? verifier.verify(model, new ProposedChange(List.of()), new TestExecution(true, List.of()), diff)
+                : verifier.verify(model, new ProposedChange(List.of()), new TestExecution(true, List.of()), diff, canvasPaths);
+        var workId = flags.canvasPath != null
+                ? FoldWiring.canvasFolder().parse(Files.readString(flags.canvasPath, StandardCharsets.UTF_8)).workId()
+                : "review";
+        if (flags.quiet) {
+            System.out.println(verification.passed()
+                    ? "dif=ready workId=" + workId + " passed=true"
+                    : "dif=blocked workId=" + workId + " passed=false");
+        } else {
+            System.out.println("review passed=" + verification.passed());
+            System.out.println(diff.render());
+            verification.results().forEach(result ->
+                    System.out.println(result.status() + " " + result.invariantId()
+                            + result.failureReason().map(reason -> ": " + reason).orElse("")));
+        }
         return verification.passed() ? 0 : 1;
     }
 
     private static int plan(String[] args) throws Exception {
         var flags = Flags.parse(args);
-        if (flags.canvasPath == null) {
-            System.err.println("--canvas is required");
+        String workId;
+        com.embabel.dif.domain.VerificationPlan verificationPlan;
+        if (flags.projectionPath != null) {
+            var projection = mapper().readValue(flags.projectionPath.toFile(), FoldProjection.class);
+            workId = projection.workId();
+            verificationPlan = FoldWiring.planner().plan(projection.model());
+        } else if (flags.canvasPath != null) {
+            var folder = FoldWiring.canvasFolder();
+            var canvas = folder.parse(Files.readString(flags.canvasPath, StandardCharsets.UTF_8));
+            workId = canvas.workId();
+            verificationPlan = FoldWiring.planner().plan(folder.fold(canvas));
+        } else {
+            System.err.println("--canvas or --projection is required");
             return 2;
         }
-        var folder = FoldWiring.canvasFolder();
-        var canvas = folder.parse(Files.readString(flags.canvasPath, StandardCharsets.UTF_8));
-        var model = folder.fold(canvas);
-        var verificationPlan = FoldWiring.planner().plan(model);
         Files.createDirectories(flags.outDir);
-        var jsonPath = flags.outDir.resolve(canvas.workId() + ".plan.json");
+        var jsonPath = flags.outDir.resolve(workId + ".plan.json");
         var payload = new LinkedHashMap<String, Object>();
-        payload.put("workId", canvas.workId());
+        payload.put("workId", workId);
         payload.put("readyForImplementation", verificationPlan.readyForImplementation());
         payload.put("ruleCount", verificationPlan.rules().size());
         payload.put("missingObligations", verificationPlan.missingObligations());
         payload.put("rules", verificationPlan.rules());
         mapper().writerWithDefaultPrettyPrinter().writeValue(jsonPath.toFile(), payload);
-        System.out.println("plan workId=" + canvas.workId());
-        System.out.println("readyForImplementation=" + verificationPlan.readyForImplementation());
-        System.out.println("rules=" + verificationPlan.rules().size());
-        System.out.print(SemanticModelRenderer.render(verificationPlan.model()));
-        System.out.println("wrote " + jsonPath);
+        if (flags.quiet) {
+            System.out.println(verificationPlan.readyForImplementation()
+                    ? "dif=ready workId=" + workId + " readyForImplementation=true"
+                    : "dif=blocked workId=" + workId + " readyForImplementation=false");
+        } else {
+            System.out.println("plan workId=" + workId);
+            System.out.println("readyForImplementation=" + verificationPlan.readyForImplementation());
+            System.out.println("rules=" + verificationPlan.rules().size());
+            System.out.print(SemanticModelRenderer.render(verificationPlan.model()));
+            System.out.println("wrote " + jsonPath);
+        }
         return verificationPlan.readyForImplementation() ? 0 : 1;
     }
 

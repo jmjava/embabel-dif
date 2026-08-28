@@ -1,0 +1,8 @@
+{
+  "properties": [
+    { "path": "safeguard.unrelated-api-endpoints", "value": "unchanged" },
+    { "path": "safeguard.dependencies-without-justification", "value": "unchanged" },
+    { "path": "api.orders.email", "value": "GET" },
+    { "path": "dto.order-status.name", "value": "OrderStatusResponse" }
+  ]
+}

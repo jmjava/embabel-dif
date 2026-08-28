@@ -66,15 +66,8 @@ public class RuleBasedSemanticVerifier implements SemanticVerifier {
         if (tests != null && !tests.passed()) {
             results.add(VerificationResult.fail("tests", "TestExecution", "Required tests did not pass"));
         }
-        if (!intentDiff.preserves(REQUIRED_UNCHANGED)) {
-            results.add(VerificationResult.fail(
-                    "INV-PRESERVE-LOGIN",
-                    intentDiff.render(),
-                    "Required login/JWT properties were not preserved"
-            ));
-        } else {
-            results.add(VerificationResult.pass("INV-PRESERVE-LOGIN", intentDiff.render()));
-        }
+        verifyRequiredPaths(results, intentDiff, REQUIRED_UNCHANGED, "INV-PRESERVE-LOGIN",
+                "Required login/JWT properties were not preserved");
         for (var invariant : model.invariants()) {
             results.add(VerificationResult.pass(
                     invariant.id(),
@@ -83,5 +76,49 @@ public class RuleBasedSemanticVerifier implements SemanticVerifier {
         }
         var failed = results.stream().anyMatch(result -> result.status().name().equals("FAIL"));
         return new SemanticVerification(!failed, results);
+    }
+
+    /**
+     * Same as {@link #verify} but required paths come from the canvas
+     * ({@link SafeguardPaths}), not the login prototype.
+     */
+    public SemanticVerification verify(
+            SemanticModel model,
+            ProposedChange change,
+            TestExecution tests,
+            IntentDiff intentDiff,
+            Set<String> requiredPaths
+    ) {
+        var results = new ArrayList<VerificationResult>();
+        if (tests != null && !tests.passed()) {
+            results.add(VerificationResult.fail("tests", "TestExecution", "Required tests did not pass"));
+        }
+        verifyRequiredPaths(results, intentDiff, requiredPaths, "INV-PRESERVE-SAFEGUARDS",
+                "Required canvas safeguards were not preserved");
+        for (var invariant : model.invariants()) {
+            results.add(VerificationResult.pass(
+                    invariant.id(),
+                    "Phase 4 stub: invariant recorded for later deterministic check — " + invariant.description()
+            ));
+        }
+        var failed = results.stream().anyMatch(result -> result.status().name().equals("FAIL"));
+        return new SemanticVerification(!failed, results);
+    }
+
+    private static void verifyRequiredPaths(
+            ArrayList<VerificationResult> results,
+            IntentDiff intentDiff,
+            Set<String> requiredPaths,
+            String invariantId,
+            String failReason
+    ) {
+        var ok = REQUIRED_UNCHANGED.equals(requiredPaths)
+                ? intentDiff.preserves(requiredPaths)
+                : intentDiff.passed(requiredPaths);
+        if (!ok) {
+            results.add(VerificationResult.fail(invariantId, intentDiff.render(), failReason));
+        } else {
+            results.add(VerificationResult.pass(invariantId, intentDiff.render()));
+        }
     }
 }

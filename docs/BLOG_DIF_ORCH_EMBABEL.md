@@ -259,5 +259,5 @@ The work is not “write more markdown.” The idea is wrong if:
 | Projection | Regenerable JSON of that model. Never a second contract. |
 | Ready For Coding | Orch readiness string. DIF may *earn* it; orch still writes it. |
 | Process gate | Files / ledger exist (`sdlc.sh gate`). |
-| Semantic gate | The canvas may proceed (`dif-fold.sh architect`, exit 1 = no). |
+| Semantic gate | The canvas may proceed (`dif-fold.sh architect`, exit 1 = no). Review of an orch canvas uses safeguard snapshots, not login fixtures. |
 | Embabel | Optional planner over folded facts. Not the fold. Not `next`. |

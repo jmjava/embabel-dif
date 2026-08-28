@@ -71,6 +71,7 @@ src/main/java/com/embabel/dif/
 ```bash
 ./mvnw test
 ./scripts/dif-orch-smoke.sh
+./scripts/dif-orch-day.sh
 ./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/dif-fold.sh architect --projection .dif/projections/FEAT-099-pagination-conflict.json
 ./scripts/dif-fold.sh review --before examples/snapshots/login-before.json --after examples/snapshots/login-auth-broken.json
@@ -89,7 +90,12 @@ Guide JSONL. `--alloy` writes an Alloy sketch; no extra binary is required.
 codes plus `.gate.json`. Existing orch commands may call
 `scripts/orch-attach/check-canvas.sh` as a silent gate: one line
 `dif=ready|blocked|skipped` (missing DIF is skip, not a new daily `next`).
-`fold` / `architect --quiet` print that same line.
+`fold` / `architect --quiet` print that same line. Review of an orch
+canvas uses `examples/snapshots/order-status-*.json` (safeguard paths),
+not the login fixtures. `check-review.sh` skips when those files are
+absent. `plan --projection` builds a `VerificationPlan` from a folded
+model without re-reading markdown. `./scripts/dif-orch-day.sh` is the
+scripted day.
 
 In the Embabel shell:
 
