@@ -113,8 +113,11 @@ spdd/canvas/<WORK-ID>.md          human contract (commit)
 
 Phase order that respects both repos:
 
-1. **Here:** canvas → `SemanticModel` mapper + CLI (`dif fold --canvas …`).
-   No Embabel required. Prove the same canvas always folds the same way.
+1. **Here (started):** canvas → `SemanticModel` mapper + CLI
+   (`./scripts/dif-fold.sh --canvas …`). No Embabel required. The same
+   accepted canvas always folds the same way. Open T## operations become
+   `MissingObligation`. A requirement vs non-goal clash is a blocking
+   `IntentConflict` (exit 1).
 2. **Orchestrator:** optional review/architect attachment — if `.dif/projections/`
    exists, cite `VerificationResult` instead of only prose findings.
 3. **Here, later:** Embabel GOAP for JVM targets only, using the folded model

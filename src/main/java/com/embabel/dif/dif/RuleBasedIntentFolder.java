@@ -159,11 +159,19 @@ public class RuleBasedIntentFolder implements IntentFolder {
                     related
             ));
         }
-        if (derived.isEmpty() && intent.type() == IntentType.PRESERVATION) {
+        if (derived.isEmpty() && (intent.type() == IntentType.PRESERVATION || intent.type() == IntentType.CONSTRAINT)) {
             derived.add(new Invariant(
                     "INV-" + shortHash(statement),
                     "Preserve: " + intent.statement(),
                     VerificationStrategy.INTENT_DIFF,
+                    related
+            ));
+        }
+        if (derived.isEmpty() && intent.type() == IntentType.REQUIREMENT) {
+            derived.add(new Invariant(
+                    "INV-" + shortHash(statement),
+                    intent.statement(),
+                    VerificationStrategy.JUNIT,
                     related
             ));
         }
@@ -242,7 +250,10 @@ public class RuleBasedIntentFolder implements IntentFolder {
         if (statement.contains("login") && observation.contains("login")) {
             return true;
         }
-        return false;
+        return !java.util.Collections.disjoint(
+                ConflictDetector.significantTokens(statement),
+                ConflictDetector.significantTokens(observation)
+        );
     }
 
     private static IntentType inferType(String statement) {

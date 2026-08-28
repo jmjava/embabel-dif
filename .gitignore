@@ -8,6 +8,8 @@ target/
 .DS_Store
 *.log
 .embabel/
+.dif/projections/*.json
+.dif/projections/*.txt
 out/
 build/
 *.class

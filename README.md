@@ -18,6 +18,7 @@ Related: [`docs/RELATIONSHIP_SDLC_SPDD.md`](docs/RELATIONSHIP_SDLC_SPDD.md) — 
 | Phase | Status |
 | --- | --- |
 | 1. Typed semantic model + deterministic fold | Working |
+| 1b. REASONS canvas → SemanticModel CLI | Working (`./scripts/dif-fold.sh`) |
 | 2. Embabel GOAP to `VerificationPlan` | Working (fixture path, no LLM required) |
 | 3. LLM code generation | Stub (`LaterPhaseActions`) |
 | 4. Deterministic verification | Semantic diff works; code/test checks stubbed |
@@ -58,8 +59,13 @@ src/main/java/com/embabel/dif/
 
 ```bash
 ./mvnw test
+./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/shell.sh
 ```
+
+`dif-fold` does not start Embabel. It reads a REASONS Canvas and writes
+`.dif/projections/<WORK-ID>.json` plus a text summary. Exit `1` means blocking
+intent conflicts (architect should not mark Ready For Coding).
 
 In the Embabel shell:
 
