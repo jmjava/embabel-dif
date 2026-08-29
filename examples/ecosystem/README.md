@@ -45,4 +45,11 @@ Both modes run in the same `up.sh` pass: a Work ID harvest on `api`,
 and an area-only pitfall on `notify` with **no** invented FEAT.
 Refresh still does not fold.
 
-`--setup-only` is what `./scripts/dif-dual-mode-e2e.sh` uses.
+`--setup-only` is the install + harvests. The **agent-linkage** test is
+`./scripts/up.sh --prove` / `dogfood-api/scripts/agent-day/run.sh`.
+It needs Cloud secret **`CORRECT_CURSOR_KEY`** (Integrations user key,
+`crsr_…` / `cursor_…`; not the injected `sk-proj…` `CURSOR_API_KEY`),
+locked to `composer-2.5` with time/token caps, then a new agent run.
+GitHub `./mvnw test` is the API only.
+
+From this repo: `./scripts/dogfood-cursor-day.sh`.

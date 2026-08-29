@@ -79,6 +79,8 @@ src/main/java/com/embabel/dif/
 ./scripts/dif-dashboard-e2e.sh   # fold → orch Dashboard readout (no JVM on Refresh)
 ./scripts/dif-dual-mode-e2e.sh   # structured Work ID + unstructured area capture
 ./scripts/ecosystem-up.sh        # full install on dogfood-api (no Cursor-only / skip-if-missing)
+./scripts/bootstrap-cursor-agent-day.sh  # NEW Cloud Agent: check CORRECT_CURSOR_KEY, spawn Cursor
+./scripts/dogfood-cursor-day.sh          # same spawn once branches are checked out
 ./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/dif-fold.sh architect --projection .dif/projections/FEAT-099-pagination-conflict.json
 ./scripts/dif-fold.sh review --before examples/snapshots/login-before.json --after examples/snapshots/login-auth-broken.json

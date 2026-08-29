@@ -94,6 +94,8 @@ Attach rules that follow from that:
   (`./scripts/up.sh` / `./scripts/ecosystem-up.sh`). That path is a
   **full** install (Cursor+Copilot+Claude+Guide marker, required fold).
   It is not `--cursor` only and it does not skip a missing DIF.
+  Agent linkage is `dogfood-api/scripts/agent-day/run.sh` (hits Cursor
+  with `CORRECT_CURSOR_KEY`). `./mvnw test` is the API, not that proof.
 
 If attach only helps people who already ran `next`, it does not help
 the day we actually have. If ad hoc work leaves no sentence in the
