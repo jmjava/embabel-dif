@@ -62,10 +62,35 @@ projection file or an exit code. It must not start a JVM to run
 
 ---
 
+## 1a. Honest constraint: the prompt is the daily driver
+
+Working with orch has a standing friction: **full process versus just
+getting the agent to do the work.** People open a prompt and skip
+`claim` → `next` → architect → one T##. That is expected. The runbook
+is for a Work ID that has to outlive the chat. It is not a gate in
+front of typing.
+
+Attach rules that follow from that:
+
+- A raw agent session with no canvas is a correct day. Do not invent
+  a Work ID or a fold to make the process feel used.
+- If `spdd/canvas/<WORK-ID>.md` is already in the tree, a silent
+  `dif=ready|blocked|skipped` may run. The human did not ask for a
+  ritual; the hook may still fail closed.
+- `sdlc.sh next` stays the orientation command *for people who want
+  orientation*. It is not the only way work is allowed to start.
+- Embabel stays off this path. Nobody boots a JVM to “just fix it.”
+
+If attach only helps people who already ran `next`, it does not help
+the day we actually have.
+
+---
+
 ## 2. What a developer day looks like after attach
 
 Nothing new is invented. DIF sits on the phases that already compare
-prose to reality.
+prose to reality. The prompt path in §1a is first-class; this section
+is the runbook path for when a Work ID already exists.
 
 ### Morning (unchanged, then one optional fold)
 
@@ -425,6 +450,7 @@ The idea is wrong — or we stop — if:
 - Start slice 3 in the orch repo before slice 1 is honest.
 - Add a second `next` / daily ritual users must learn.
 
-The daily process stays claim → next → one phase → one T##. DIF only
-changes what “Ready For Coding” and “review passed” are allowed to
-mean.
+When someone *is* on the runbook, it stays claim → next → one phase →
+one T##. DIF only changes what “Ready For Coding” and “review passed”
+are allowed to mean. A day that never opened `next` is still a
+correct day.
