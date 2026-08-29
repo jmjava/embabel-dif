@@ -45,4 +45,10 @@ Both modes run in the same `up.sh` pass: a Work ID harvest on `api`,
 and an area-only pitfall on `notify` with **no** invented FEAT.
 Refresh still does not fold.
 
-`--setup-only` is what `./scripts/dif-dual-mode-e2e.sh` uses.
+`--setup-only` is the install + harvests (no LLM). The **agent-linkage**
+test is `./scripts/up.sh --prove` / `dogfood-api/scripts/agent-day/run.sh`:
+it hits Cursor (`CURSOR_API_KEY` + `@cursor/sdk`). The spawned agent
+executes `/sdlc-next` and then an unstructured persist. GitHub `./mvnw test`
+does not claim that proof.
+
+From this repo: `./scripts/dogfood-cursor-day.sh`.
