@@ -23,14 +23,19 @@ DICE / Guide graph          what did we learn before (retrieval)
 SDLC phases                 who acts when
 ```
 
-## Do not collapse the two repos
+## Seams, not repo walls
 
-| Concern | Orchestrator | This repo |
+The main rule is synergy across orch, DIF, Embabel, and Guide. Git
+boundaries are secondary. Collapsing the projects is fine: you still
+have separation of **work** (orient / freeze / plan / retrieve). Keep
+those jobs even if the trees join:
+
+| Concern | Orchestrator | DIF / Embabel |
 | --- | --- | --- |
-| Primary artifact | Markdown canvas + JSONL ledger | Typed Java records |
-| Runtime | Assistant prompts + Python `sdlc-engine` | Embabel 1.5 + fold/verify |
-| Must stay assistant-agnostic | Yes | No — Embabel is a later option |
-| Source of truth | Canvas + `spdd/memory/lessons.jsonl` | Folded `SemanticModel` as a *projection* |
+| Primary artifact | Markdown canvas + JSONL ledger | Typed records as a *projection* |
+| Runtime | Assistant prompts + Python `sdlc-engine` | Fold CLI now; Embabel later |
+| Cheap path | `next` / Dashboard / a raw prompt | May be JVM; must not be required to type |
+| Source of truth | Canvas + `spdd/memory/lessons.jsonl` | Folded `SemanticModel` (regenerable) |
 
 The orchestrator already uses **Guide DICE** as an optional working store
 (`CONTEXT_BACKENDS=…,guide-dice`). DICE retrieves past decisions and pitfalls.
@@ -42,9 +47,10 @@ DICE  = query what we already believe
 DIF   = decide what must stay true, then verify it
 ```
 
-Merging Embabel into the orchestrator would fight its design: “not a compiled
-agent runtime.” The useful direction is the opposite: **keep DIF here**, expose
-a fold/verify CLI or library, and let orchestrator phases *call* it.
+The useful direction is **call each other**: a fold/verify CLI or
+library, orchestrator phases and the Dashboard *read* it. Putting that
+library in the orch tree is fine. Making Embabel the only way to run
+`next` is the cost we still avoid unless synergy clearly pays for it.
 
 ## Where the orchestrator is still probabilistic
 

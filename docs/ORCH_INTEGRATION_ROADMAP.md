@@ -1,12 +1,13 @@
 # Orchestrator integration roadmap
 
-How `embabel-dif` gets into a developer’s day without becoming the
-orchestrator — and how we prove that path with tests before anyone
-changes `sdlc-engine`.
+How `embabel-dif` and the orchestrator share a day. Synergy is the
+main rule; separate git repos are a tactic. We prove attach with
+tests, including changes to `sdlc-engine` when the board or a phase
+should see the same gate line.
 
 Attachment shape and success criteria stay in
-[RELATIONSHIP_SDLC_SPDD.md](RELATIONSHIP_SDLC_SPDD.md). Why the two
-repos stay separate is in [REASONING.md](REASONING.md) §8–9. How the
+[RELATIONSHIP_SDLC_SPDD.md](RELATIONSHIP_SDLC_SPDD.md). Synergy vs
+seams is in [REASONING.md](REASONING.md) §8–9. How the
 fold itself grows is [FOLD_ITERATION.md](FOLD_ITERATION.md). The
 blog / generation-tool cut of the same plan is
 [BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md). This page
@@ -104,9 +105,9 @@ experimental ops console (`./scripts/sdlc.sh console`, aliases
 are deterministic rules over files — “no LLM” is printed on the tab.
 It is not the consumer install path and not a second daily driver.
 
-DIF does not get a tab. Embabel does not get a button. The fold does
-not start from Refresh. Each piece we already decided lands on a card
-that exists:
+DIF does not need its own tab. Embabel does not need a button. The
+fold still does not start from Refresh. Synergy means the **same
+cards already on the board** show the fold when a gate file exists:
 
 | Dashboard card (today) | What it already reads | Where our work shows up |
 | --- | --- | --- |
@@ -126,9 +127,10 @@ Rules that keep the console honest:
 - ADF Viewer (`:5050`) stays Jira/GitHub ticket edit. It does not talk
   to Guide or DIF.
 
-Until that suggestion rule exists in orch, the Dashboard does not know
-DIF. That is fine: silent attach on architect / review is the first
-consumer. The board is the second place the same exit code can appear.
+The Dashboard should **read** `.dif/projections/<WORK-ID>.gate.json`
+when the pointer is set. That is synergy on the board we already
+have. It still must not invoke the folder. Silent architect / review
+attach and this readout are the same one-liner.
 
 ---
 
@@ -480,21 +482,25 @@ The idea is wrong — or we stop — if:
    as long as the agent says it looks correct.
 5. A machine-ready `.gate.json` and a human-ready canvas disagree
    after a fold of the same file.
-6. We merge the repos to make a demo look complete.
+6. We collapse the seams (canvas replaced by JSON, fold inside
+   `@Action`, Refresh starts a JVM) to make a demo look complete.
+   Joining git trees is allowed; erasing the seams is not.
+7. The Dashboard Refresh starts a fold, a JVM, or Embabel.
 
 ---
 
 ## 8. What we will not do on this path
 
-- Merge `embabel-dif` into `sdlc-spdd-orchestrator`.
-- Make `sdlc-engine` depend on Java, Embabel, Neo4j, or OpenAI.
+- Erase the seams (canvas, deterministic fold, cheap `next`) to force
+  a single runtime. Joining trees or sharing a library is synergy.
 - Replace `sdlc.sh gate` process checks with the fold (they answer a
   different question).
 - Add a new human-facing language or a second canvas.
-- Require Guide or `OPENAI_API_KEY` for architect / review.
+- Require Guide, Embabel, or `OPENAI_API_KEY` for a correct day.
 - Treat `.dif/projections/` as the design contract.
-- Start slice 3 in the orch repo before slice 1 is honest.
 - Add a second `next` / daily ritual users must learn.
+- Fold, start a JVM, or boot Embabel from Dashboard Refresh. Reading
+  `.gate.json` on that board is the synergy we want.
 
 When someone *is* on the runbook, it stays claim → next → one phase →
 one T##. DIF only changes what “Ready For Coding” and “review passed”

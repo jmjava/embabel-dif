@@ -236,20 +236,41 @@ the lessons ledger. The ledger stays the system of record; SQLite, Guide, and
 
 ---
 
-## 8. Why two repositories
+## 8. Synergy first; repo layout is a tactic
 
-Merging this code into the orchestrator would fight both designs.
+The main rule is **synergy**: one Today, one canvas, one ledger, one
+gate line the Dashboard can read. Separate git repos are how the code
+happens to live today. They are not a success criterion. If a single
+tree, a library, or a tighter console attach helps the day, we do that.
 
-| If we put DIF inside the orchestrator | Cost |
+What we still will not collapse are the **seams** (not the repos):
+
+| Seam | Why it stays |
 | --- | --- |
-| `sdlc-engine` grows a JVM agent | `next` / `gate` stop being assistant-agnostic |
-| Canvas becomes a Java IR | Humans lose the markdown contract |
-| Embabel becomes required | Copilot / Claude installs pay for a planner they do not run |
+| REASONS markdown is the human contract | JSON / Jira / Guide are not |
+| Fold is deterministic after accept | The LLM does not write `SemanticModel` |
+| `next` / Dashboard Refresh do not have to boot a JVM | Copilot / Claude / a raw prompt stay cheap |
+| Embabel plans over an already-folded model | It does not classify |
 
-| If we put the orchestrator inside this repo | Cost |
-| --- | --- |
-| Slash commands and Python engine live next to a prototype IR | The experiment cannot move without dragging a product |
-| “Not a compiled runtime” is no longer true | Operators cannot install process without the fold |
+Collapsing the projects does **not** by itself present problems. You
+still have **separation of work**. Git remotes were never that
+separation.
+
+| Job | Who does it | Still separate in one tree? |
+| --- | --- | --- |
+| Who acts when | orch (`next`, Dashboard, phases) | yes |
+| What must stay true | DIF (`IntentFolder`) | yes |
+| What to do next on typed facts | Embabel (optional GOAP) | yes |
+| What we learned | ledger / Guide | yes |
+
+The failure is one *function* doing two jobs: fold inside `@Action`,
+`next` starting Embabel, Dashboard writing a canvas. Same tree,
+different functions, is synergy. Two remotes that refuse to share a
+Today board was the old wall.
+
+Putting DIF *code* next to `sdlc-engine` is allowed. Replacing the
+canvas with a Java IR is not. Requiring Embabel to run `next` is a
+cost we weigh, not a wall we worship.
 
 The contract between them is a file:
 
