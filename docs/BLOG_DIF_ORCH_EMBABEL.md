@@ -91,6 +91,11 @@ Git stores what changed. A DIF-style layer stores why it had to, and
 what must still be true. Embabel, when present, decides what to do next.
 The orchestrator decides who is allowed to act.
 
+How a bullet becomes a field is [DATA_INGEST.md](DATA_INGEST.md): parser
+→ mapper → folder → gate / plan. Guide may quote the freeze. Embabel
+may plan over it. Neither writes `SemanticModel`. User Goal prose,
+`next`, and retrieve do not ingest.
+
 ---
 
 ## DICE is not DIF

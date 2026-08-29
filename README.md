@@ -21,6 +21,7 @@ This is **not** an implementation of any proprietary Merly DIF algorithm.
 | [`docs/FOLD_ITERATION.md`](docs/FOLD_ITERATION.md) | Steal ideas from cousins; ten steps to iterate the fold |
 | [`docs/ORCH_INTEGRATION_ROADMAP.md`](docs/ORCH_INTEGRATION_ROADMAP.md) | Daily orch loop, attach rules, integration test ladder |
 | [`docs/BLOG_DIF_ORCH_EMBABEL.md`](docs/BLOG_DIF_ORCH_EMBABEL.md) | Publication source: three layers, how far we take the idea |
+| [`docs/DATA_INGEST.md`](docs/DATA_INGEST.md) | How a canvas or change-request becomes each model |
 
 Mermaid for the working test flow and each system's data model is in [Systems, tests, and data models](#systems-tests-and-data-models) below.
 
@@ -255,6 +256,36 @@ erDiagram
   SemanticSnapshot ||--o{ SemanticProperty : "path = value"
   SemanticSnapshot ||--|| IntentDiff : review
 ```
+
+### How data gets in
+
+Hop-by-hop map: [docs/DATA_INGEST.md](docs/DATA_INGEST.md). Tests:
+`DataModelIngestTest`.
+
+```mermaid
+sequenceDiagram
+  participant Human
+  participant Parser as ReasonsCanvasParser
+  participant Mapper as CanvasIntentMapper
+  participant Folder as IntentFolder
+  participant Gate as GateReport
+  participant Emb as Embabel GOAP
+  participant Guide as GuideLedger
+
+  Human->>Parser: accepted canvas markdown
+  Note over Parser: User Goal prose dropped
+  Parser->>Mapper: ReasonsCanvas (R/N/S/O bullets)
+  Mapper->>Folder: CandidateIntent (type from heading)
+  Folder->>Gate: SemanticModel + open T##
+  Gate-->>Human: dif=ready or blocked
+  Folder->>Guide: optional Decision / Pitfall JSONL
+  Folder->>Emb: already-folded facts
+  Emb-->>Human: VerificationPlan
+```
+
+A second ingest path is Embabel-only: `UserInput` → `ChangeRequest` →
+`FixtureIntentInterpreter` or `LlmIntentInterpreter` → the same
+`IntentFolder`. The LLM writes `CandidateIntent`, never the freeze.
 
 Canvas sections map like this: **R** → `REQUIREMENT`, **N** non-goals → `CONSTRAINT`, **S** safeguards → `PRESERVATION`. A requirement vs non-goal pair becomes a blocking `IntentConflict`. An operation with no matching work (T03 on FEAT-001) becomes a `MissingObligation`. Review compares two `SemanticSnapshot`s; safeguard paths come from the canvas **S** lines, not login fixtures.
 
