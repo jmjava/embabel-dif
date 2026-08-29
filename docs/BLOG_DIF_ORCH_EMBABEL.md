@@ -160,17 +160,36 @@ The tax is this: you can follow the runbook perfectly and still ship a
 contradictory canvas, mark **Ready For Coding** in prose, or pass review
 because the change “looks right.”
 
-That is the hole DIF is for. The filter for every attach is:
+That is the hole DIF is for. There is a second tax we kept
+understating: **the runbook is not how the work actually starts.** The
+constant friction of orch is full process versus opening a prompt and
+asking an agent to just solve it. People skip `claim` → `next` →
+architect → one T## because that loop is slower than the chat. That
+skip is not a discipline failure. It is the real daily driver.
+
+Two jobs, one person:
+
+| Job | Wins on | Loses when |
+| --- | --- | --- |
+| Get the change done | A raw agent prompt | You needed a contract that survives this chat |
+| Keep a Work ID / canvas / gate | Handoff, review, next week, a different model | You had to run the runbook *in order to type* |
+
+Designing as if job 2 is a prerequisite for job 1 is why the process
+gets abandoned. DIF must not make that worse. The filter for every
+attach is:
 
 > Does this make the existing orchestrator commands harder to get wrong,
-> without adding a new ritual?
+> without adding a new ritual — **and without making a raw prompt the
+> wrong way to work?**
 
 | Do | Do not |
 | --- | --- |
-| Keep claim → `next` → architect → one T## → review as the only user surface | Add `dif-fold.sh next` as a second daily driver |
-| When DIF is installed, architect cannot earn Ready For Coding on a requirement vs non-goal clash | Teach users fold / projection / `.gate.json` as a parallel workflow |
+| Treat “open a prompt” as a correct day | Shame skipping `next`, or require `next` before the agent may edit |
+| If a canvas already exists, fail closed in the background | Invent a Work ID so the process feels used |
+| If no canvas exists, let the agent work | Block the prompt until someone claims |
+| When someone *is* on architect / review, DIF earns Ready For Coding | Add `dif-fold.sh next` as a second daily driver |
 | When DIF is missing, the day is unchanged | Require Embabel, Java, Neo4j, or OpenAI to run `next` |
-| Review can fail a dropped safeguard without asking whether it looks correct | Replace `sdlc.sh gate` process checks with the fold (they answer a different question) |
+| Review can fail a dropped safeguard without asking whether it looks correct | Teach fold / `.gate.json` as a parallel workflow people must remember before they type |
 
 A new orchestrator user who never heard of DIF should have a **better**
 day if it is installed, and the **same** day if it is not.
@@ -253,6 +272,8 @@ The work is not “write more markdown.” The idea is wrong if:
    of truth. The projection must remain regenerable and disposable.
 7. `sdlc.sh next` or `gate` starts a JVM.
 8. Developers need a second `next` to have a correct day.
+9. A raw agent prompt is treated as the wrong way to work. The
+   runbook is not a prerequisite for typing.
 
 ---
 

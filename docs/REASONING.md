@@ -263,6 +263,12 @@ spdd/canvas/<WORK-ID>.md          human source of truth
 Opt in the same way Guide is opted in: useful when present, ignored when not.
 Never make `sdlc-engine` start a JVM to run `next`.
 
+The other collapse is social, not technical: orch’s full loop versus
+opening a prompt and asking the agent to solve it. People skip the
+runbook because the chat is faster. That skip is the real daily
+driver. DIF attaches only when a canvas already exists. It does not
+get to make the prompt the wrong way to work.
+
 ---
 
 ## 9. The path, and why this order
