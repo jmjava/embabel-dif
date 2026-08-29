@@ -45,11 +45,9 @@ Both modes run in the same `up.sh` pass: a Work ID harvest on `api`,
 and an area-only pitfall on `notify` with **no** invented FEAT.
 Refresh still does not fold.
 
-`--setup-only` is the install + harvests (no LLM). The **agent-linkage**
-test is `./scripts/up.sh --prove` / `dogfood-api/scripts/agent-day/run.sh`.
-Inside a Cursor / Cloud Agent environment that script **is** the agent
-(`CURSOR_AGENT=1`): it runs `/sdlc-next` and an unstructured persist.
-A second spawn via `@cursor/sdk` needs a User API key. GitHub `./mvnw test`
-does not claim that proof.
+`--setup-only` is the install + harvests. The **agent-linkage** test is
+`./scripts/up.sh --prove` / `dogfood-api/scripts/agent-day/run.sh`.
+It needs Cloud secret **`CORRECT_CURSOR_KEY`** (Integrations user key),
+then a new agent run. GitHub `./mvnw test` is the API only.
 
 From this repo: `./scripts/dogfood-cursor-day.sh`.
