@@ -50,7 +50,6 @@ Refresh still does not fold.
 It needs Cloud secret **`CORRECT_CURSOR_KEY`** (Integrations user key,
 `crsr_…` / `cursor_…`; not the injected `sk-proj…` `CURSOR_API_KEY`),
 locked to `composer-2.5` with time/token caps, then a new agent run.
-GitGuardian CI fails closed without repo secret `GITGUARDIAN_API_KEY`.
 GitHub `./mvnw test` is the API only.
 
 From this repo: `./scripts/dogfood-cursor-day.sh`.

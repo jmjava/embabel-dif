@@ -50,13 +50,13 @@ The spawn is locked to **`composer-2.5`** (cheapest standard Cursor model, not F
 150k tokens total, 12 minute wall clock, then `timeout` kills the process.
 Do not raise these. Do not spawn extra Cloud Agents.
 
-## Secrets / GitGuardian
+## Secrets
 
 Never write `CORRECT_CURSOR_KEY` / `CURSOR_API_KEY` values into git, receipts,
-or logs. `.github/workflows/gitguardian.yml` runs `ggshield` on every push/PR
-and **fails if `GITGUARDIAN_API_KEY` is missing** from repo Actions secrets.
-Add that secret and make **GitGuardian scan** a required status check.
-`scripts/guard-no-secret-leak.sh` also fails if a live secret value is in
+or logs. GitGuardian coverage is the **GitHub App** on the dashboard (no
+repo Actions key). Do not add `ggshield` CI unless someone wants a second
+gate and is willing to store `GITGUARDIAN_API_KEY`.
+`scripts/guard-no-secret-leak.sh` fails if a live secret value is in
 tracked files.
 
 ## Rules
