@@ -82,4 +82,17 @@ if [[ ! -f "$DOGFOOD_HOME/.cursor/commands/sdlc-next.md" ]]; then
 fi
 
 echo "==> spawn Cursor agent (CORRECT_CURSOR_KEY)"
-exec "$DOGFOOD_HOME/scripts/agent-day/run.sh"
+set +e
+"$DOGFOOD_HOME/scripts/agent-day/run.sh"
+rc=$?
+set -e
+echo "==> Cursor day verdict (not just spawn)"
+if [[ -x "$DOGFOOD_HOME/scripts/agent-day/status.sh" ]]; then
+  "$DOGFOOD_HOME/scripts/agent-day/status.sh" || true
+fi
+if [[ "$rc" -ne 0 ]]; then
+  echo "TEST=FAILED"
+  exit "$rc"
+fi
+echo "TEST=WORKED"
+exit 0
