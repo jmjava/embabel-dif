@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Clone/use dogfood-api and run its ecosystem bootstrap (orch + DIF + Dashboard).
+# Clone/use dogfood-api and run its full-ecosystem install
+# (Cursor+Copilot+Claude+Guide marker, required DIF fold, both harvests, Dashboard).
 set -euo pipefail
 here=$(cd "$(dirname "$0")/.." && pwd)
 tools="${DOGFOOD_TOOLS:-$here/.tools}"
