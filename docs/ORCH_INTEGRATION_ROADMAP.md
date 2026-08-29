@@ -132,6 +132,11 @@ when the pointer is set. That is synergy on the board we already
 have. It still must not invoke the folder. Silent architect / review
 attach and this readout are the same one-liner.
 
+Worked example: [examples/dashboard-flow](../examples/dashboard-flow/README.md)
+and `./scripts/dif-dashboard-e2e.sh` (same Work ID, blocked then ready,
+Today suggestion appears and clears). Optional
+`DIF_DASHBOARD_PLAYWRIGHT=1` clicks Refresh.
+
 ---
 
 ## 2. What a developer day looks like after attach
