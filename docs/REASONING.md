@@ -165,7 +165,9 @@ have to be an Embabel app. The orchestrator cannot take that dependency: it is
 an installable operating model for Cursor, Copilot, and Claude, and it is
 explicitly *not* a compiled agent runtime.
 
-So Embabel is a **consumer** of the folded model, not its home.
+So Embabel is a **consumer** of the folded model, not its home. The
+project is still Embabel DIF: the fold exists so Embabel (and anything
+else that can read the same types) has facts instead of mush.
 
 ```text
 milestone 1 (no repo edits)

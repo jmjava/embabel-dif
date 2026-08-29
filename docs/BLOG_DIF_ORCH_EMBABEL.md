@@ -21,6 +21,11 @@ detail lives in [REASONING.md](REASONING.md),
 
 This is **not** an implementation of any proprietary Merly DIF algorithm.
 
+The repo is called `embabel-dif` because the idea is the pairing, not
+a fold that happens to mention Embabel. DIF is the substrate. Embabel
+is the planner that substrate is shaped for. The orchestrator is the
+first place that substrate has to earn its keep.
+
 ---
 
 ## The sentence
@@ -85,6 +90,11 @@ They answer different questions. Used together, DIF can make the canvas
 Git stores what changed. A DIF-style layer stores why it had to, and
 what must still be true. Embabel, when present, decides what to do next.
 The orchestrator decides who is allowed to act.
+
+How a bullet becomes a field is [DATA_INGEST.md](DATA_INGEST.md): parser
+→ mapper → folder → gate / plan. Guide may quote the freeze. Embabel
+may plan over it. Neither writes `SemanticModel`. User Goal prose,
+`next`, and retrieve do not ingest.
 
 ---
 
@@ -213,7 +223,11 @@ Step 2 next: that is where the orchestrator still asks an LLM to be a
 verifier. Attaching an exit code is cheaper than inventing a new phase.
 
 Embabel later: planning over typed facts is valuable, and it is the
-part that must not leak into the orchestrator’s runtime.
+part that must not leak into the orchestrator’s runtime. Fold being
+Embabel-free does not retire Embabel. The CLI freezes the canvas;
+`DifEmbabelAgent.foldIntent` then *calls* that folder so GOAP can plan
+on a blackboard. Classify / conflict / obligation stay out of `@Action`
+methods. A day without the Spring platform is still a correct day.
 
 Guide last: retrieval already works. Vocabulary alignment is not a
 prerequisite for checkability.
@@ -266,4 +280,4 @@ The work is not “write more markdown.” The idea is wrong if:
 | Ready For Coding | Orch readiness string. DIF may *earn* it; orch still writes it. |
 | Process gate | Files / ledger exist (`sdlc.sh gate`). |
 | Semantic gate | The canvas may proceed (`dif-fold.sh architect`, exit 1 = no). Review of an orch canvas uses safeguard snapshots, not login fixtures. |
-| Embabel | Optional planner over folded facts. Not the fold. Not `next`. |
+| Embabel | Optional planner over already-folded facts. Not the fold. Not `next`. |

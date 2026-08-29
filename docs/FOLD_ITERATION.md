@@ -13,6 +13,7 @@ The prototype spec says what the IR is. [REASONING.md](REASONING.md) says why
 the fold is a sibling of Embabel, not Embabel itself. How the attach enters
 a developer’s day is [ORCH_INTEGRATION_ROADMAP.md](ORCH_INTEGRATION_ROADMAP.md).
 The publication source is [BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md).
+How a bullet becomes an intent is [DATA_INGEST.md](DATA_INGEST.md).
 This page says how the fold gets better without becoming a research project.
 
 ---
@@ -34,6 +35,58 @@ emit missing obligations, hash the result.
 
 That is enough of an algorithm. Iteration means **more rules and better
 tests**, not a new methodology.
+
+---
+
+## 1a. Where Embabel comes in if fold is not JVM-inside-`next`
+
+The repo is named `embabel-dif` because the idea **is** the pairing:
+DIF freezes intent; Embabel plans over the freeze. Fold being
+Embabel-free does **not** retire Embabel. It puts Embabel in the only
+job it is good at: **choose the next action on facts that already
+exist.** Without the fold, Embabel would plan over mush. Without
+Embabel (as the intended consumer), the fold is only a canvas linter.
+
+The daily path never starts it:
+
+```text
+canvas  →  IntentFolder (FoldWiring, no Spring)  →  SemanticModel
+                 ↓
+          orch architect / review / --quiet
+          (bash + files; sdlc.sh next does not boot a JVM)
+```
+
+The optional path starts it *after* that model exists, for JVM targets
+only:
+
+```text
+already-folded SemanticModel
+        ↓
+Embabel blackboard  (typed objects, not markdown)
+        ↓
+GOAP                  capture → interpret → foldIntent → analyze → plan
+        ↓
+VerificationPlan      what to check next; conflicts stay on the plan
+```
+
+`DifEmbabelAgent.foldIntent` is a one-line call to `IntentFolder`. That
+is the seam. Embabel **invokes** the folder when the blackboard needs a
+`SemanticModel`. It does **not** classify R/N/S, detect conflicts, or
+derive obligations inside `@Action` methods. Those rules stay behind
+`IntentFolder` so the CLI and the agent see the same freeze.
+
+What Embabel owns, then:
+
+| Owns | Does not own |
+| --- | --- |
+| Action order on typed facts (GOAP) | The fold algorithm |
+| Replanning when a new fact appears | `sdlc.sh next` / process gates |
+| `VerificationPlan` as a goal object | The REASONS Canvas as contract |
+| Optional live boot (`DIF_LIVE_EMBABEL=1`) | Guide ingest, a second Neo4j |
+
+If you never boot Embabel, the day is still correct: same canvas, same
+model, same fail-closed gate. Embabel is how a JVM app *uses* that
+model. It is not how the model is made.
 
 ---
 
