@@ -28,6 +28,22 @@ installs the full ecosystem if needed, then runs the spawn.
 | `jmjava/dogfood-api` | `cursor/dogfood-cursor-agent-148e` | https://github.com/jmjava/dogfood-api/pull/2 |
 | `jmjava/sdlc-spdd-orchestrator` | `main` | already merged (persist without Work ID) |
 
+## Spend locks
+
+The spawn is locked to **`composer-2.5`** (cheapest standard Cursor model, not Fast).
+`run.sh` refuses any other model. Hard caps: 2 sends, 8 minutes per send,
+150k tokens total, 12 minute wall clock, then `timeout` kills the process.
+Do not raise these. Do not spawn extra Cloud Agents.
+
+## Secrets / GitGuardian
+
+Never write `CORRECT_CURSOR_KEY` / `CURSOR_API_KEY` values into git, receipts,
+or logs. `.github/workflows/gitguardian.yml` runs `ggshield` on every push/PR
+and **fails if `GITGUARDIAN_API_KEY` is missing** from repo Actions secrets.
+Add that secret and make **GitGuardian scan** a required status check.
+`scripts/guard-no-secret-leak.sh` also fails if a live secret value is in
+tracked files.
+
 ## Rules
 
 - Full install: Cursor+Copilot+Claude+Guide marker. No partial / skip-if-missing.

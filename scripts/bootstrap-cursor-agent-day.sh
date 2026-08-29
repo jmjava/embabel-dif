@@ -27,6 +27,19 @@ if [[ "${CORRECT_CURSOR_KEY}" == sk-* ]]; then
   exit 1
 fi
 
+"$DIF_HOME/scripts/guard-no-secret-leak.sh"
+
+# Spend locks for the SDK spawn (cheapest model, hard time/token caps).
+export LIVE_CURSOR_MODEL="${LIVE_CURSOR_MODEL:-composer-2.5}"
+export CURSOR_RUN_TIMEOUT_MS="${CURSOR_RUN_TIMEOUT_MS:-480000}"
+export CURSOR_MAX_TOTAL_TOKENS="${CURSOR_MAX_TOTAL_TOKENS:-150000}"
+export CURSOR_HARD_DEADLINE_SEC="${CURSOR_HARD_DEADLINE_SEC:-720}"
+export CURSOR_MAX_SENDS="${CURSOR_MAX_SENDS:-2}"
+if [[ "$LIVE_CURSOR_MODEL" != "composer-2.5" ]]; then
+  echo "FAIL: refusing LIVE_CURSOR_MODEL=$LIVE_CURSOR_MODEL (locked to composer-2.5)" >&2
+  exit 1
+fi
+
 checkout() {
   local dir="$1" repo="$2"
   if [[ ! -d "$dir/.git" ]]; then
