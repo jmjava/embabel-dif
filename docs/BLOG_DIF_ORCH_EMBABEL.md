@@ -241,7 +241,18 @@ runs, the agent sees one line (`dif=ready`, `dif=blocked`, or
 `dif=skipped`) — not a fold dump they then have to interpret.
 
 Embabel stays later and optional. Wiring it into `next` would be the
-other collapse.
+other collapse. Wiring it into the ops console Dashboard would be the
+same collapse with a Refresh button.
+
+The Dashboard (`sdlc.sh console`, default tab) is orch’s **Today**
+board: deterministic suggestions from the pointer, process gates,
+staged lessons, Guide up/down, and Jira/GitHub config. DIF fits as
+another row on that board when a `.gate.json` already exists —
+`dif=blocked` next to an open gate — not as a new tab and not as a
+fold launched from the UI. Ad hoc harvest is the Memory card’s staged
+count. Jira stays Integrations / Issues; a changed ticket updates
+REASONS first, then the fold. A day that never opened the console is
+still a correct day.
 
 ---
 
@@ -316,6 +327,8 @@ The work is not “write more markdown.” The idea is wrong if:
 10. An ad hoc chat is folded into a `SemanticModel`, or a fake
     `FEAT-ADHOC-*` is invented so `capture` has a Work ID. Harvest
     is a staged lesson by area, or nothing.
+11. The ops console Dashboard starts a fold, a JVM, or Embabel on
+    Refresh. It may *read* `.gate.json`. It must not write a model.
 
 ---
 

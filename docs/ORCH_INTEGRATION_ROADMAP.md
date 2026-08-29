@@ -96,6 +96,42 @@ have helped tomorrow.
 
 ---
 
+## 1b. How this fits the ops console Dashboard
+
+The orchestrator already has a **Dashboard**: the default tab of the
+experimental ops console (`./scripts/sdlc.sh console`, aliases
+`installer` / `dashboard`, `:5051`). It is a **readout**. Suggestions
+are deterministic rules over files — “no LLM” is printed on the tab.
+It is not the consumer install path and not a second daily driver.
+
+DIF does not get a tab. Embabel does not get a button. The fold does
+not start from Refresh. Each piece we already decided lands on a card
+that exists:
+
+| Dashboard card (today) | What it already reads | Where our work shows up |
+| --- | --- | --- |
+| **Today** | `dashboard_suggestions`: staged lessons, open process gates, no pointer, Guide down, Jira/GitHub unconfigured | One more rule, same shape: if `.gate.json` / `dif=blocked` exists for the pointer, suggest “fix the canvas” — not “run fold”. Missing CLI → no row (`dif=skipped` is silence). |
+| **Active work** | Pointer, phase, `open_gates`, next T##, `recommended_command` | Process gates stay. Semantic gate is an optional chip (`dif=ready\|blocked`) on the same Work ID. It does not replace `sdlc.sh gate`. |
+| **Memory & backends** | Accepted / staged `lessons.jsonl` counts; SQLite; Guide up/down | Ad hoc harvest is a **staged** bump (`source=adhoc-prompt`). Guide quote is the existing Guide card, not a new backend. DIF does not write the ledger. |
+| **Integrations** | Jira configured?, `gh`, ADF viewer | Jira is the tracker. REASONS is the contract. A Jira AC change does **not** rewrite the fold. Issues tab / `/sdlc-spdd-plan` / sync still update the canvas; then re-fold. Dashboard may later say “canvas and Jira disagree”; it must not fold the ticket. |
+| **Recent activity** | Registry + accepted/staged lessons + `*.history` | A re-fold is not a new feed source. A staged pitfall from an ad hoc day already appears as `staged: pitfall …`. |
+
+Rules that keep the console honest:
+
+- Never start a JVM, Embabel, or `dif-fold` from a Dashboard refresh.
+- Read `.gate.json` / the one-liner the same way Guide is probed: useful
+  when present, ignored when not.
+- A day that never opened `:5051` is still a correct day. The consumer
+  path remains `sdlc.sh next` and the slash commands.
+- ADF Viewer (`:5050`) stays Jira/GitHub ticket edit. It does not talk
+  to Guide or DIF.
+
+Until that suggestion rule exists in orch, the Dashboard does not know
+DIF. That is fine: silent attach on architect / review is the first
+consumer. The board is the second place the same exit code can appear.
+
+---
+
 ## 2. What a developer day looks like after attach
 
 Nothing new is invented. DIF sits on the phases that already compare

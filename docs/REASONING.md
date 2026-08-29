@@ -274,6 +274,11 @@ We do not have to lose the day. A skipped runbook can still stage a
 ledger / DICE. It is not a fold. Inventing a Work ID so `capture`
 validates is the wrong harvest.
 
+The ops console Dashboard is the same rule in a UI: a deterministic
+readout of pointer, gates, ledger, Guide, and Jira config. DIF may
+appear there as `dif=ready|blocked` on Active work / Today. It does
+not get a tab, and Refresh must not start a fold.
+
 ---
 
 ## 9. The path, and why this order
