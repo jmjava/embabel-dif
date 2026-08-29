@@ -213,7 +213,11 @@ Step 2 next: that is where the orchestrator still asks an LLM to be a
 verifier. Attaching an exit code is cheaper than inventing a new phase.
 
 Embabel later: planning over typed facts is valuable, and it is the
-part that must not leak into the orchestrator’s runtime.
+part that must not leak into the orchestrator’s runtime. Fold being
+Embabel-free does not retire Embabel. The CLI freezes the canvas;
+`DifEmbabelAgent.foldIntent` then *calls* that folder so GOAP can plan
+on a blackboard. Classify / conflict / obligation stay out of `@Action`
+methods. A day without the Spring platform is still a correct day.
 
 Guide last: retrieval already works. Vocabulary alignment is not a
 prerequisite for checkability.
@@ -266,4 +270,4 @@ The work is not “write more markdown.” The idea is wrong if:
 | Ready For Coding | Orch readiness string. DIF may *earn* it; orch still writes it. |
 | Process gate | Files / ledger exist (`sdlc.sh gate`). |
 | Semantic gate | The canvas may proceed (`dif-fold.sh architect`, exit 1 = no). Review of an orch canvas uses safeguard snapshots, not login fixtures. |
-| Embabel | Optional planner over folded facts. Not the fold. Not `next`. |
+| Embabel | Optional planner over already-folded facts. Not the fold. Not `next`. |
