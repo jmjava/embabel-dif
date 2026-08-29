@@ -47,7 +47,8 @@ Refresh still does not fold.
 
 `--setup-only` is the install + harvests. The **agent-linkage** test is
 `./scripts/up.sh --prove` / `dogfood-api/scripts/agent-day/run.sh`.
-It needs Cloud secret **`CORRECT_CURSOR_KEY`** (Integrations user key),
+It needs Cloud secret **`CORRECT_CURSOR_KEY`** (Integrations user key,
+`crsr_…` / `cursor_…`; not the injected `sk-proj…` `CURSOR_API_KEY`),
 locked to `composer-2.5` with time/token caps, then a new agent run.
 GitGuardian CI fails closed without repo secret `GITGUARDIAN_API_KEY`.
 GitHub `./mvnw test` is the API only.

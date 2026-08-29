@@ -23,7 +23,7 @@ if [[ -z "${CORRECT_CURSOR_KEY:-}" ]]; then
 fi
 echo "    CORRECT_CURSOR_KEY: present (len=${#CORRECT_CURSOR_KEY})"
 if [[ "${CORRECT_CURSOR_KEY}" == sk-* ]]; then
-  echo "FAIL: CORRECT_CURSOR_KEY looks like sk-… — need a cursor_… Integrations key" >&2
+  echo "FAIL: CORRECT_CURSOR_KEY looks like sk-… — need a crsr_… / cursor_… Integrations key" >&2
   exit 1
 fi
 
@@ -38,6 +38,14 @@ export CURSOR_MAX_SENDS="${CURSOR_MAX_SENDS:-2}"
 if [[ "$LIVE_CURSOR_MODEL" != "composer-2.5" ]]; then
   echo "FAIL: refusing LIVE_CURSOR_MODEL=$LIVE_CURSOR_MODEL (locked to composer-2.5)" >&2
   exit 1
+fi
+
+# First up.sh path creates orch .venv. Without python3.12-venv the venv is
+# a python symlink and no pip; later checks treat that as "already there".
+if ! python3.12 -c 'import ensurepip' >/dev/null 2>&1; then
+  echo "==> installing python3.12-venv (ensurepip missing)"
+  sudo apt-get update -qq
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3.12-venv
 fi
 
 checkout() {
