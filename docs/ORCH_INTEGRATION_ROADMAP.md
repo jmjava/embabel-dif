@@ -91,7 +91,9 @@ Attach rules that follow from that:
   the id uses `(none)` in the Work ID slot. Do not invent
   `FEAT-ADHOC-*`. Playable consumer:
   [`jmjava/dogfood-api`](https://github.com/jmjava/dogfood-api)
-  (`./scripts/up.sh` / `./scripts/ecosystem-up.sh`).
+  (`./scripts/up.sh` / `./scripts/ecosystem-up.sh`). That path is a
+  **full** install (Cursor+Copilot+Claude+Guide marker, required fold).
+  It is not `--cursor` only and it does not skip a missing DIF.
 
 If attach only helps people who already ran `next`, it does not help
 the day we actually have. If ad hoc work leaves no sentence in the

@@ -21,8 +21,8 @@ page is the map so a blog / generation tool can quote it.
                       │
          ┌────────────┼────────────┐
          ▼            ▼            ▼
-    orch process   DIF fold    Guide (opt)
-    claim / next   no JVM      retrieve
+    orch process   DIF fold    Guide marker
+    claim / next   required    retrieve (live stack optional)
 ```
 
 ```bash
@@ -35,9 +35,11 @@ git clone https://github.com/jmjava/dogfood-api.git && cd dogfood-api && ./scrip
 | Piece | Repo | What `up.sh` does |
 | --- | --- | --- |
 | Product | `jmjava/dogfood-api` | This is `--target` |
-| Process + Dashboard | `jmjava/sdlc-spdd-orchestrator` | `init-project`, `claim`, `console :5051` |
-| Fold | `jmjava/embabel-dif` | `dif-fold.sh architect --quiet` → `.gate.json` |
-| Retrieve | `jmjava/orch-guide` | Only with `--with-guide` |
+| Process + Dashboard | `jmjava/sdlc-spdd-orchestrator` | **Full** `init-project --cursor --copilot --claude --with-guide`, then `claim` + `console :5051` |
+| Fold | `jmjava/embabel-dif` | Required `dif-fold.sh architect --quiet` → `.gate.json` |
+| Retrieve | `jmjava/orch-guide` | Marker always; live Neo4j only with `--with-guide-stack` |
+
+This demo does **not** do a Cursor-only / skip-if-missing install. Missing DIF, a blocked fold, or an orch that still requires `work_id` to capture is a hard fail.
 
 Both modes run in the same `up.sh` pass: a Work ID harvest on `api`,
 and an area-only pitfall on `notify` with **no** invented FEAT.
