@@ -179,7 +179,7 @@ hops 1–4.
 | Tempting source | Why it does not write |
 | --- | --- |
 | Ops console Dashboard refresh | readout only; suggestions read files / `.gate.json`, never fold |
-| A raw agent prompt with no canvas | expected day; no Work ID, no fold. May *stage* a lesson by area (`source=adhoc-prompt`); that is DICE, not a freeze |
+| A raw agent prompt with no canvas | expected day; no Work ID, no fold. Stage `kind + area + body` (`source=adhoc-prompt`); that is DICE, not a freeze. Playable on `dogfood-api` `notify/` |
 | User Goal / Business Goal prose | parser only takes mapped bullets |
 | Guide `work_subgraph` | retrieve-only |
 | `lessons.jsonl` / SQLite | orch memory; may quote a fold, not freeze one |
