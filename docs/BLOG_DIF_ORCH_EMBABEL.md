@@ -272,6 +272,8 @@ The work is not “write more markdown.” The idea is wrong if:
    of truth. The projection must remain regenerable and disposable.
 7. `sdlc.sh next` or `gate` starts a JVM.
 8. Developers need a second `next` to have a correct day.
+9. A raw agent prompt is treated as the wrong way to work. The
+   runbook is not a prerequisite for typing.
 
 ---
 
