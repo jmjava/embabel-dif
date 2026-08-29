@@ -86,9 +86,12 @@ Attach rules that follow from that:
   (`source=adhoc-prompt`). Do not invent a canvas so `capture` has a
   Work ID. Do not fold the chat. Retrieve next time with
   `context retrieve --area` / `spdd_areaLessons`.
-- Today `LessonRecord.validate` still requires `work_id` to write.
-  That is the remaining orch tax. The intended write is
-  `kind + area + body`; Work ID is optional when one already exists.
+- Capture is `kind + area + body`. Work ID is optional when one
+  already exists. `LessonRecord.validate` accepts area-only rows;
+  the id uses `(none)` in the Work ID slot. Do not invent
+  `FEAT-ADHOC-*`. Playable consumer:
+  [`jmjava/dogfood-api`](https://github.com/jmjava/dogfood-api)
+  (`./scripts/up.sh` / `./scripts/ecosystem-up.sh`).
 
 If attach only helps people who already ran `next`, it does not help
 the day we actually have. If ad hoc work leaves no sentence in the
@@ -136,6 +139,12 @@ Worked example: [examples/dashboard-flow](../examples/dashboard-flow/README.md)
 and `./scripts/dif-dashboard-e2e.sh` (same Work ID, blocked then ready,
 Today suggestion appears and clears). Optional
 `DIF_DASHBOARD_PLAYWRIGHT=1` clicks Refresh.
+
+Playable consumer for **both** modes:
+[examples/ecosystem](../examples/ecosystem/README.md) →
+[`jmjava/dogfood-api`](https://github.com/jmjava/dogfood-api)
+(`./scripts/ecosystem-up.sh`). Structured `FEAT-001` fold + Dashboard
+chip; unstructured `notify` pitfall with no invented FEAT.
 
 ---
 

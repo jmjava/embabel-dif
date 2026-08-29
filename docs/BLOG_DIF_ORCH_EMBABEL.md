@@ -222,12 +222,15 @@ What we do **not** keep as a freeze:
 - A `SemanticModel` folded from chat (nothing was accepted)
 - An Embabel plan over that mush
 
-The ledger already retrieves by area without a Work ID.
-`LessonRecord.validate` today still requires `work_id` to *write*.
-That is the remaining tax — orch work, not a new DIF hop. The
-intended capture is `kind + area + body + source=adhoc-prompt`.
-A Work ID is optional metadata when one already exists. Guide may
-quote the same row. DIF does not write `lessons.jsonl`.
+The ledger retrieves by area without a Work ID, and capture now
+writes the same way: `kind + area + body + source=adhoc-prompt`.
+A Work ID is optional metadata when one already exists. The id
+slot is `(none)` — not a invented `FEAT-ADHOC-*`. Guide may quote
+the same row. DIF does not write `lessons.jsonl`.
+
+The playable consumer is [`dogfood-api`](https://github.com/jmjava/dogfood-api):
+real Order Status code, orch Dashboard, DIF fold, both modes in
+`./scripts/up.sh`. From this repo: `./scripts/ecosystem-up.sh`.
 
 If nobody stages a sentence, the day is still correct. We just
 learned nothing that will survive the chat. That is a cheaper loss
