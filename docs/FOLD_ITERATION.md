@@ -39,9 +39,12 @@ tests**, not a new methodology.
 
 ## 1a. Where Embabel comes in if fold is not JVM-inside-`next`
 
-Fold being Embabel-free does **not** retire Embabel. It puts Embabel in
-the only job it is good at: **choose the next action on facts that
-already exist.**
+The repo is named `embabel-dif` because the idea **is** the pairing:
+DIF freezes intent; Embabel plans over the freeze. Fold being
+Embabel-free does **not** retire Embabel. It puts Embabel in the only
+job it is good at: **choose the next action on facts that already
+exist.** Without the fold, Embabel would plan over mush. Without
+Embabel (as the intended consumer), the fold is only a canvas linter.
 
 The daily path never starts it:
 

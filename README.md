@@ -1,6 +1,6 @@
 # embabel-dif
 
-Prototype exploring how a **Deterministic Intent Folding (DIF)**-style semantic layer can sit next to Embabel's typed blackboard and planners.
+Prototype exploring how a **Deterministic Intent Folding (DIF)**-style semantic layer can sit next to Embabel's typed blackboard and planners. The idea **is** that pairing: fold freezes intent; Embabel plans over the freeze. The fold is Embabel-free so other consumers (the orchestrator) can use the same model.
 
 ```text
 LLM = probabilistic interpreter / generator

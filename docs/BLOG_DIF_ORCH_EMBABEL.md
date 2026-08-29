@@ -21,6 +21,11 @@ detail lives in [REASONING.md](REASONING.md),
 
 This is **not** an implementation of any proprietary Merly DIF algorithm.
 
+The repo is called `embabel-dif` because the idea is the pairing, not
+a fold that happens to mention Embabel. DIF is the substrate. Embabel
+is the planner that substrate is shaped for. The orchestrator is the
+first place that substrate has to earn its keep.
+
 ---
 
 ## The sentence
