@@ -80,9 +80,19 @@ Attach rules that follow from that:
 - `sdlc.sh next` stays the orientation command *for people who want
   orientation*. It is not the only way work is allowed to start.
 - Embabel stays off this path. Nobody boots a JVM to “just fix it.”
+- The day may still leave **lessons**. After an ad hoc session,
+  stage 1–3 `decision` / `pitfall` / `pattern` rows keyed by **area**
+  (`source=adhoc-prompt`). Do not invent a canvas so `capture` has a
+  Work ID. Do not fold the chat. Retrieve next time with
+  `context retrieve --area` / `spdd_areaLessons`.
+- Today `LessonRecord.validate` still requires `work_id` to write.
+  That is the remaining orch tax. The intended write is
+  `kind + area + body`; Work ID is optional when one already exists.
 
 If attach only helps people who already ran `next`, it does not help
-the day we actually have.
+the day we actually have. If ad hoc work leaves no sentence in the
+ledger, we kept the speed and threw away the only part that would
+have helped tomorrow.
 
 ---
 

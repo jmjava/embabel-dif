@@ -269,6 +269,11 @@ runbook because the chat is faster. That skip is the real daily
 driver. DIF attaches only when a canvas already exists. It does not
 get to make the prompt the wrong way to work.
 
+We do not have to lose the day. A skipped runbook can still stage a
+`decision` / `pitfall` / `pattern` keyed by **area**. That is the
+ledger / DICE. It is not a fold. Inventing a Work ID so `capture`
+validates is the wrong harvest.
+
 ---
 
 ## 9. The path, and why this order
