@@ -76,6 +76,7 @@ src/main/java/com/embabel/dif/
 ./scripts/dif-orch-smoke.sh
 ./scripts/dif-orch-day.sh
 ./scripts/dif-live-e2e.sh   # reuses orch Guide+Neo4j; optional live Embabel
+./scripts/dif-dashboard-e2e.sh   # fold → orch Dashboard readout (no JVM on Refresh)
 ./scripts/dif-fold.sh --canvas examples/canvases/FEAT-001-order-status-api.md
 ./scripts/dif-fold.sh architect --projection .dif/projections/FEAT-099-pagination-conflict.json
 ./scripts/dif-fold.sh review --before examples/snapshots/login-before.json --after examples/snapshots/login-auth-broken.json
@@ -175,12 +176,14 @@ flowchart TB
   day["./scripts/dif-orch-day.sh<br/>fold twice / architect / review / plan --projection<br/>skip when CLI or snapshots missing"]
   attach["orch tests/test-optional-dif.sh<br/>+ test-command-specs.sh<br/>stub: skipped / ready / blocked"]
   live["./scripts/dif-live-e2e.sh<br/>orch test-guide-stack-live.sh<br/>quote JSONL via GuideClient<br/>Embabel GOAP UserInput → VerificationPlan"]
+  dash["./scripts/dif-dashboard-e2e.sh<br/>FEAT-DASH-flow blocked → ready<br/>Dashboard reads .gate.json"]
   guideMvn["orch-guide ./mvnw test<br/>194 tests; needs Docker socket"]
 
   unit --> smoke --> day
   day --> attach
   day --> live
-  live --> guideMvn
+  live --> dash
+  dash --> guideMvn
 ```
 
 Live E2E sequence (the three-way path that already passed here):

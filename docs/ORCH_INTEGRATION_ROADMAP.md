@@ -1,12 +1,13 @@
 # Orchestrator integration roadmap
 
-How `embabel-dif` gets into a developer’s day without becoming the
-orchestrator — and how we prove that path with tests before anyone
-changes `sdlc-engine`.
+How `embabel-dif` and the orchestrator share a day. Synergy is the
+main rule; separate git repos are a tactic. We prove attach with
+tests, including changes to `sdlc-engine` when the board or a phase
+should see the same gate line.
 
 Attachment shape and success criteria stay in
-[RELATIONSHIP_SDLC_SPDD.md](RELATIONSHIP_SDLC_SPDD.md). Why the two
-repos stay separate is in [REASONING.md](REASONING.md) §8–9. How the
+[RELATIONSHIP_SDLC_SPDD.md](RELATIONSHIP_SDLC_SPDD.md). Synergy vs
+seams is in [REASONING.md](REASONING.md) §8–9. How the
 fold itself grows is [FOLD_ITERATION.md](FOLD_ITERATION.md). The
 blog / generation-tool cut of the same plan is
 [BLOG_DIF_ORCH_EMBABEL.md](BLOG_DIF_ORCH_EMBABEL.md). This page
@@ -93,6 +94,48 @@ If attach only helps people who already ran `next`, it does not help
 the day we actually have. If ad hoc work leaves no sentence in the
 ledger, we kept the speed and threw away the only part that would
 have helped tomorrow.
+
+---
+
+## 1b. How this fits the ops console Dashboard
+
+The orchestrator already has a **Dashboard**: the default tab of the
+experimental ops console (`./scripts/sdlc.sh console`, aliases
+`installer` / `dashboard`, `:5051`). It is a **readout**. Suggestions
+are deterministic rules over files — “no LLM” is printed on the tab.
+It is not the consumer install path and not a second daily driver.
+
+DIF does not need its own tab. Embabel does not need a button. The
+fold still does not start from Refresh. Synergy means the **same
+cards already on the board** show the fold when a gate file exists:
+
+| Dashboard card (today) | What it already reads | Where our work shows up |
+| --- | --- | --- |
+| **Today** | `dashboard_suggestions`: staged lessons, open process gates, no pointer, Guide down, Jira/GitHub unconfigured | One more rule, same shape: if `.gate.json` / `dif=blocked` exists for the pointer, suggest “fix the canvas” — not “run fold”. Missing CLI → no row (`dif=skipped` is silence). |
+| **Active work** | Pointer, phase, `open_gates`, next T##, `recommended_command` | Process gates stay. Semantic gate is an optional chip (`dif=ready\|blocked`) on the same Work ID. It does not replace `sdlc.sh gate`. |
+| **Memory & backends** | Accepted / staged `lessons.jsonl` counts; SQLite; Guide up/down | Ad hoc harvest is a **staged** bump (`source=adhoc-prompt`). Guide quote is the existing Guide card, not a new backend. DIF does not write the ledger. |
+| **Integrations** | Jira configured?, `gh`, ADF viewer | Jira is the tracker. REASONS is the contract. A Jira AC change does **not** rewrite the fold. Issues tab / `/sdlc-spdd-plan` / sync still update the canvas; then re-fold. Dashboard may later say “canvas and Jira disagree”; it must not fold the ticket. |
+| **Recent activity** | Registry + accepted/staged lessons + `*.history` | A re-fold is not a new feed source. A staged pitfall from an ad hoc day already appears as `staged: pitfall …`. |
+
+Rules that keep the console honest:
+
+- Never start a JVM, Embabel, or `dif-fold` from a Dashboard refresh.
+- Read `.gate.json` / the one-liner the same way Guide is probed: useful
+  when present, ignored when not.
+- A day that never opened `:5051` is still a correct day. The consumer
+  path remains `sdlc.sh next` and the slash commands.
+- ADF Viewer (`:5050`) stays Jira/GitHub ticket edit. It does not talk
+  to Guide or DIF.
+
+The Dashboard should **read** `.dif/projections/<WORK-ID>.gate.json`
+when the pointer is set. That is synergy on the board we already
+have. It still must not invoke the folder. Silent architect / review
+attach and this readout are the same one-liner.
+
+Worked example: [examples/dashboard-flow](../examples/dashboard-flow/README.md)
+and `./scripts/dif-dashboard-e2e.sh` (same Work ID, blocked then ready,
+Today suggestion appears and clears). Optional
+`DIF_DASHBOARD_PLAYWRIGHT=1` clicks Refresh.
 
 ---
 
@@ -444,21 +487,25 @@ The idea is wrong — or we stop — if:
    as long as the agent says it looks correct.
 5. A machine-ready `.gate.json` and a human-ready canvas disagree
    after a fold of the same file.
-6. We merge the repos to make a demo look complete.
+6. We collapse the seams (canvas replaced by JSON, fold inside
+   `@Action`, Refresh starts a JVM) to make a demo look complete.
+   Joining git trees is allowed; erasing the seams is not.
+7. The Dashboard Refresh starts a fold, a JVM, or Embabel.
 
 ---
 
 ## 8. What we will not do on this path
 
-- Merge `embabel-dif` into `sdlc-spdd-orchestrator`.
-- Make `sdlc-engine` depend on Java, Embabel, Neo4j, or OpenAI.
+- Erase the seams (canvas, deterministic fold, cheap `next`) to force
+  a single runtime. Joining trees or sharing a library is synergy.
 - Replace `sdlc.sh gate` process checks with the fold (they answer a
   different question).
 - Add a new human-facing language or a second canvas.
-- Require Guide or `OPENAI_API_KEY` for architect / review.
+- Require Guide, Embabel, or `OPENAI_API_KEY` for a correct day.
 - Treat `.dif/projections/` as the design contract.
-- Start slice 3 in the orch repo before slice 1 is honest.
 - Add a second `next` / daily ritual users must learn.
+- Fold, start a JVM, or boot Embabel from Dashboard Refresh. Reading
+  `.gate.json` on that board is the synergy we want.
 
 When someone *is* on the runbook, it stays claim → next → one phase →
 one T##. DIF only changes what “Ready For Coding” and “review passed”

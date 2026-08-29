@@ -280,7 +280,7 @@ without re-interpreting the markdown, and Guide remains optional.
 - Reimplement Merly DIF, or claim we did.
 - Replace Embabel’s planner with the fold, or the fold with Embabel.
 - Replace the REASONS Canvas with JSON, Alloy, or a new DSL.
-- Merge this repo into `sdlc-spdd-orchestrator`.
+- Erase the fold/`@Action` seam. Joining this tree with orch is allowed.
 - Add SMT, GOAP, or Guide wiring to make a demo look complete.
 - Grow the rule catalog without a canvas that fails today.
 

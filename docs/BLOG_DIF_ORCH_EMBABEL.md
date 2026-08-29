@@ -120,18 +120,18 @@ SQLite, Guide, and `.dif/projections/` are regenerable.
 
 ---
 
-## Why three repos, not one runtime
+## Synergy first, not repo walls
 
-Merging Embabel or DIF into the orchestrator would fight its design: it
-is an installable operating model, not a compiled agent runtime.
+The main rule is that orch, DIF, Embabel, and Guide **help the same
+day**. Separate repositories are a tactic. They are not the goal.
+A monorepo, a library inside the console, or a Dashboard row that
+reads `.gate.json` is in play when it creates synergy.
 
-| If we put DIF inside the orchestrator | Cost |
-| --- | --- |
-| `sdlc-engine` grows a JVM agent | `next` / `gate` stop being assistant-agnostic |
-| Canvas becomes a Java IR | Humans lose the markdown contract |
-| Embabel becomes required | Copilot / Claude installs pay for a planner they do not run |
+Collapsing the trees is not a problem if **separation of work**
+stays: orch still orients, DIF still freezes, Embabel still plans,
+Guide still retrieves. The problem is one function doing two jobs.
 
-The contract between them is a file:
+The contract they share is a file:
 
 ```text
 spdd/canvas/<WORK-ID>.md          human source of truth (commit)
@@ -240,8 +240,19 @@ becomes earned. The runbook stays the orchestrator’s. When the hook
 runs, the agent sees one line (`dif=ready`, `dif=blocked`, or
 `dif=skipped`) — not a fold dump they then have to interpret.
 
-Embabel stays later and optional. Wiring it into `next` would be the
-other collapse.
+Embabel stays later and optional. Requiring it to run `next` is a
+cost, not a synergy win. The Dashboard **reading** `.gate.json` is
+synergy. Refresh starting Embabel is not.
+
+The Dashboard (`sdlc.sh console`, default tab) is orch’s **Today**
+board: deterministic suggestions from the pointer, process gates,
+staged lessons, Guide up/down, and Jira/GitHub config. DIF belongs
+on that board when a `.gate.json` already exists —
+`dif=blocked` next to an open gate — not as a new tab and not as a
+fold launched from the UI. Ad hoc harvest is the Memory card’s staged
+count. Jira stays Integrations / Issues; a changed ticket updates
+REASONS first, then the fold. A day that never opened the console is
+still a correct day.
 
 ---
 
@@ -316,6 +327,8 @@ The work is not “write more markdown.” The idea is wrong if:
 10. An ad hoc chat is folded into a `SemanticModel`, or a fake
     `FEAT-ADHOC-*` is invented so `capture` has a Work ID. Harvest
     is a staged lesson by area, or nothing.
+11. The ops console Dashboard starts a fold, a JVM, or Embabel on
+    Refresh. It should *read* `.gate.json`. It must not write a model.
 
 ---
 
@@ -328,7 +341,7 @@ The work is not “write more markdown.” The idea is wrong if:
 - Not a conventional RAG index
 - Not “just another prompt template”
 - Not an attempt to make all AI deterministic
-- Not a reason to compile the orchestrator into an agent runtime
+- Not a reason to require Embabel before anyone may type
 - Not a new human-facing language
 
 ---
