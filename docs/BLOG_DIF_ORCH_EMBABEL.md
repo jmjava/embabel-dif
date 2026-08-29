@@ -190,9 +190,48 @@ attach is:
 | When someone *is* on architect / review, DIF earns Ready For Coding | Add `dif-fold.sh next` as a second daily driver |
 | When DIF is missing, the day is unchanged | Require Embabel, Java, Neo4j, or OpenAI to run `next` |
 | Review can fail a dropped safeguard without asking whether it looks correct | Teach fold / `.gate.json` as a parallel workflow people must remember before they type |
+| After an ad hoc session, stage 1–3 lessons by **area** | Fold the chat into a `SemanticModel`, or invent a FEAT so capture has a Work ID |
 
 A new orchestrator user who never heard of DIF should have a **better**
 day if it is installed, and the **same** day if it is not.
+
+### Ad hoc sessions still leave lessons
+
+Skipping `next` does **not** have to throw the day away. The chat
+produced decisions, pitfalls, and sometimes a reusable pattern. That
+is DICE’s job, not DIF’s.
+
+```text
+ad hoc prompt
+    → code lands (or it doesn't)
+    → 1–3 sentences: decision / pitfall / pattern
+    → stage into .sdlc/staged/lessons.jsonl   (area-keyed)
+    → accept later, or not
+    → retrieve next time via --area / spdd_areaLessons
+```
+
+What we keep from the day is the **sentence**, not the transcript.
+“Retry without an idempotency key double-posts.” “Constructor
+injection only — the controller grew a service call and we undid it.”
+That is enough for the next agent in that package to see.
+
+What we do **not** keep as a freeze:
+
+- The prompt, the tool log, or a summary of the whole session
+- A invented canvas / `FEAT-ADHOC-*` so the runbook feels used
+- A `SemanticModel` folded from chat (nothing was accepted)
+- An Embabel plan over that mush
+
+The ledger already retrieves by area without a Work ID.
+`LessonRecord.validate` today still requires `work_id` to *write*.
+That is the remaining tax — orch work, not a new DIF hop. The
+intended capture is `kind + area + body + source=adhoc-prompt`.
+A Work ID is optional metadata when one already exists. Guide may
+quote the same row. DIF does not write `lessons.jsonl`.
+
+If nobody stages a sentence, the day is still correct. We just
+learned nothing that will survive the chat. That is a cheaper loss
+than forcing the runbook to harvest it.
 
 The thing we declined — a second orientation command people must learn —
 would have been DIF doing the orchestrator’s job. Silent fail-closed on
@@ -274,6 +313,9 @@ The work is not “write more markdown.” The idea is wrong if:
 8. Developers need a second `next` to have a correct day.
 9. A raw agent prompt is treated as the wrong way to work. The
    runbook is not a prerequisite for typing.
+10. An ad hoc chat is folded into a `SemanticModel`, or a fake
+    `FEAT-ADHOC-*` is invented so `capture` has a Work ID. Harvest
+    is a staged lesson by area, or nothing.
 
 ---
 

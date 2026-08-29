@@ -178,7 +178,7 @@ hops 1–4.
 
 | Tempting source | Why it does not write |
 | --- | --- |
-| A raw agent prompt with no canvas | expected day; no Work ID, no fold |
+| A raw agent prompt with no canvas | expected day; no Work ID, no fold. May *stage* a lesson by area (`source=adhoc-prompt`); that is DICE, not a freeze |
 | User Goal / Business Goal prose | parser only takes mapped bullets |
 | Guide `work_subgraph` | retrieve-only |
 | `lessons.jsonl` / SQLite | orch memory; may quote a fold, not freeze one |
